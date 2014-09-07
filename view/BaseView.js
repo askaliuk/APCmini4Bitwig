@@ -149,7 +149,7 @@ BaseView.prototype.onScene = function (scene, event)
             {
                 // No Sends on effect tracks
                 var mode = this.surface.getCurrentMode ();
-                if (mode >= MODE_SEND1 && mode <= MODE_SEND1)
+                if (mode >= MODE_SEND1 && mode <= MODE_SEND8)
                     this.surface.setPendingMode (MODE_VOLUME);
             }
         }
