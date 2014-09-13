@@ -16,7 +16,6 @@ SessionView.prototype.onActivate = function ()
     BaseView.prototype.onActivate.call (this);
 
     this.model.getCurrentTrackBank ().setIndication (true);
-    this.drawSceneButtons ();
 };
 
 SessionView.prototype.updateArrows = function ()
@@ -29,12 +28,37 @@ SessionView.prototype.updateArrows = function ()
     BaseView.prototype.updateArrows.call (this);
 };
 
-SessionView.prototype.drawSceneButtons = function () {};
-
-SessionView.prototype.onGridNote = function (channel, scene, event)
+SessionView.prototype.onScene = function (scene, event)
 {
-    if (!event.isDown ())
+    if (this.surface.isShiftPressed ())
+    {
+        this.onShiftScene (scene, event);
         return;
+    }
+
+    if (event.isDown ())
+    {
+        this.model.getCurrentTrackBank ().launchScene (scene);
+        this.surface.setButton (APC_BUTTON_SCENE_BUTTON1 + scene, APC_BUTTON_STATE_ON);
+    }
+    else if (event.isUp ())
+        this.surface.setButton (APC_BUTTON_SCENE_BUTTON1 + scene, APC_BUTTON_STATE_OFF);
+};
+
+SessionView.prototype.onGridNote = function (note, velocity)
+{
+    if (this.surface.isShiftPressed ())
+    {
+        this.onShiftGridNote (note, velocity);
+        return;
+    }
+
+    if (velocity == 0)
+        return;
+        
+    note -= 36;
+    var channel = note % 8;
+    var scene = 7 - Math.floor (note / 8);
         
     var tb = this.model.getCurrentTrackBank ();
     var slot = tb.getTrack (channel).slots[scene];
@@ -90,6 +114,12 @@ SessionView.prototype.scrollDown = function (event)
 
 SessionView.prototype.drawGrid = function ()
 {
+    if (this.surface.isShiftPressed ())
+    {
+        this.drawShiftGrid ();
+        return;
+    }
+    
     var tb = this.model.getCurrentTrackBank ();
     for (var x = 0; x < 8; x++)
     {
@@ -97,6 +127,8 @@ SessionView.prototype.drawGrid = function ()
         for (var y = 0; y < 8; y++)
             this.drawPad (t.slots[y], x, y, t.recarm);
     }
+
+    this.drawSceneButtons ();
 };
 
 SessionView.prototype.drawPad = function (slot, x, y, isArmed)
@@ -112,5 +144,5 @@ SessionView.prototype.drawPad = function (slot, x, y, isArmed)
     else if (slot.hasContent)
         color = APC_COLOR_YELLOW;
 
-    this.surface.pads.light (x, y, color);
+    this.surface.pads.light ((7 - y) * 8 + x, color);
 };

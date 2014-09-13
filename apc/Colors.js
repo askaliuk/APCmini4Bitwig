@@ -10,3 +10,8 @@ var APC_COLOR_RED          = 3;   // red,
 var APC_COLOR_RED_BLINK    = 4;   // red blink, 
 var APC_COLOR_YELLOW       = 5;   // yellow, 
 var APC_COLOR_YELLOW_BLINK = 6;   // yellow blink, 
+
+Scales.SCALE_COLOR_OFF          = APC_COLOR_BLACK;
+Scales.SCALE_COLOR_OCTAVE       = APC_COLOR_YELLOW;
+Scales.SCALE_COLOR_NOTE         = APC_COLOR_BLACK;
+Scales.SCALE_COLOR_OUT_OF_SCALE = APC_COLOR_BLACK;

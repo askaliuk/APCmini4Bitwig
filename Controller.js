@@ -10,12 +10,11 @@ function Controller ()
     
     var scales = new Scales (36, 100, 8, 8);
     this.model = new Model (null, scales, 8, 8, 8);
-/* TODO    this.model.getTrackBank ().addTrackSelectionListener (doObject (this, function (index, isSelected)
+    this.model.getTrackBank ().addTrackSelectionListener (doObject (this, function (index, isSelected)
     {
         if (this.surface.isActiveView (VIEW_PLAY))
             this.surface.getActiveView ().updateNoteMapping ();
     }));
-*/
     
     this.surface = new APC (output, input);
     this.surface.setDefaultMode (MODE_VOLUME);
@@ -34,10 +33,10 @@ function Controller ()
     }));
     
 
-// TODO  this.surface.addView (VIEW_PLAY, new PlayView (this.model));
+    this.surface.addView (VIEW_PLAY, new PlayView (this.model));
     this.surface.addView (VIEW_SESSION, new SessionView (this.model));
-// TODO  this.surface.addView (VIEW_SEQUENCER, new SequencerView (this.model));
-// TODO  this.surface.addView (VIEW_DRUM, new DrumView (this.model));
+    this.surface.addView (VIEW_SEQUENCER, new SequencerView (this.model));
+    this.surface.addView (VIEW_DRUM, new DrumView (this.model));
     
     this.surface.setActiveView (VIEW_SESSION);
     this.surface.setPendingMode (MODE_VOLUME);
@@ -64,47 +63,11 @@ Controller.prototype.flush = function ()
         this.surface.setButton (APC_BUTTON_TRACK_BUTTON7, mode >= MODE_SEND1 && mode <= MODE_SEND8 ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
         this.surface.setButton (APC_BUTTON_TRACK_BUTTON8, mode == MODE_DEVICE || mode == MODE_MACRO ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
     }
-    else
-    {
-        var tb = this.model.getCurrentTrackBank ();
-        for (var i = 0; i < 8; i++)
-        {
-            switch (view.trackState)
-            {
-                case TRACK_STATE_CLIP_STOP:
-                    this.surface.setButton (APC_BUTTON_TRACK_BUTTON1 + i, this.surface.isPressed (APC_BUTTON_TRACK_BUTTON1 + i) ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-                    break;
-                case TRACK_STATE_SOLO:
-                    this.surface.setButton (APC_BUTTON_TRACK_BUTTON1 + i, tb.getTrack (i).solo ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-                    break;
-                case TRACK_STATE_REC_ARM:
-                    this.surface.setButton (APC_BUTTON_TRACK_BUTTON1 + i, tb.getTrack (i).recarm ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-                    break;
-                case TRACK_STATE_MUTE:
-                    this.surface.setButton (APC_BUTTON_TRACK_BUTTON1 + i, !tb.getTrack (i).mute ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-                    break;
-                case TRACK_STATE_SELECT:
-                    this.surface.setButton (APC_BUTTON_TRACK_BUTTON1 + i, tb.getTrack (i).selected ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-                    break;
-            }
-        }
-    }
 };
 
 Controller.prototype.updateMode = function (mode)
 {
     this.updateIndication (mode);
-    
-    var isShift = this.surface.isShiftPressed ();
-    var view = this.surface.getActiveView ();
-   
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON1, isShift && view.trackState == TRACK_STATE_CLIP_STOP ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON2, isShift && view.trackState == TRACK_STATE_SOLO ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON3, isShift && view.trackState == TRACK_STATE_REC_ARM ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON4, isShift && view.trackState == TRACK_STATE_MUTE ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON5, isShift && view.trackState == TRACK_STATE_SELECT ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON6, isShift && this.model.isEffectTrackBankActive () ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
 };
 
 Controller.prototype.updateIndication = function (mode)

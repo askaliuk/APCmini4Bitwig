@@ -11,10 +11,6 @@ function PlayView (model)
     this.defaultVelocity = [];
     for (var i = 0; i < 128; i++)
         this.defaultVelocity.push (i);
-    Config.addPropertyListener (Config.FIXED_ACCENT_VALUE, doObject (this, function ()
-    {
-        this.initMaxVelocity ();
-    }));
     var tb = model.getTrackBank ();
     tb.addNoteListener (doObject (this, function (pressed, note, velocity)
     {
@@ -46,55 +42,53 @@ PlayView.prototype.onActivate = function ()
 {
     BaseView.prototype.onActivate.call (this);
 
-    this.surface.setButton (PUSH_BUTTON_NOTE, PUSH_BUTTON_STATE_HI);
-    this.surface.setButton (PUSH_BUTTON_SESSION, PUSH_BUTTON_STATE_ON);
-    this.surface.setButton (PUSH_BUTTON_ACCENT, Config.accentActive ? PUSH_BUTTON_STATE_HI : PUSH_BUTTON_STATE_ON);
     this.model.getCurrentTrackBank ().setIndication (false);
-    this.updateSceneButtons ();
     this.initMaxVelocity ();
-};
-
-PlayView.prototype.updateSceneButtons = function (buttonID)
-{
-    for (var i = 0; i < 8; i++)
-        this.surface.setButton (PUSH_BUTTON_SCENE1 + i, PUSH_COLOR_BLACK);
-};
-
-PlayView.prototype.usesButton = function (buttonID)
-{
-    switch (buttonID)
-    {
-        case PUSH_BUTTON_REPEAT:
-        case PUSH_BUTTON_SELECT:
-        case PUSH_BUTTON_ADD_EFFECT:
-        case PUSH_BUTTON_ADD_TRACK:
-        case PUSH_BUTTON_USER_MODE:
-        case PUSH_BUTTON_DUPLICATE:
-        case PUSH_BUTTON_CLIP:
-            return false;
-    }
-    return true;
 };
 
 PlayView.prototype.drawGrid = function ()
 {
+    if (this.surface.isShiftPressed ())
+    {
+        this.drawShiftGrid ();
+        return;
+    }
+    
     var t = this.model.getCurrentTrackBank ().getSelectedTrack ();
     var isKeyboardEnabled = t != null && t.canHoldNotes;
-    var isRecording = this.model.getTransport ().isRecording || this.model.getCurrentTrackBank ().isClipRecording ();
+    var transport = this.model.getTransport ();
+    var isRecording = this.model.hasRecordingState ();
     for (var i = 36; i < 100; i++)
     {
-        this.surface.pads.light (i, isKeyboardEnabled ? (this.pressedKeys[i] > 0 ?
-            (isRecording ? PUSH_COLOR2_RED_HI : PUSH_COLOR2_GREEN_HI) :
-            this.scales.getColor (this.noteMap, i)) : PUSH_COLOR2_BLACK);
-        this.surface.pads.blink (i, PUSH_COLOR2_BLACK);
+        this.surface.pads.light (i - 36, isKeyboardEnabled ? (this.pressedKeys[i] > 0 ?
+            (isRecording ? APC_COLOR_RED : APC_COLOR_GREEN) :
+            this.scales.getColor (this.noteMap, i)) : APC_COLOR_BLACK);
     }
+
+    this.drawSceneButtons ();
+};
+
+PlayView.prototype.drawSceneButtons = function ()
+{
+    for (var i = 0; i < 8; i++)
+        this.surface.setButton (APC_BUTTON_TRACK_BUTTON1 + i, APC_BUTTON_STATE_OFF);
+    this.turnOffSceneButtons ();
 };
 
 PlayView.prototype.onGridNote = function (note, velocity)
 {
+    if (this.surface.isShiftPressed ())
+    {
+        this.onShiftGridNote (note, velocity);
+        return;
+    }
+
     var t = this.model.getCurrentTrackBank ().getSelectedTrack ();
     if (t == null || !t.canHoldNotes)
         return;
+        
+    this.surface.sendMidiEvent (0x90, this.noteMap[note], velocity);
+        
     // Mark selected notes
     for (var i = 0; i < 128; i++)
     {
@@ -103,14 +97,44 @@ PlayView.prototype.onGridNote = function (note, velocity)
     }
 };
 
+PlayView.prototype.onSelectTrack = function (index, event)
+{
+    if (this.surface.isShiftPressed ())
+    {
+        BaseView.prototype.onSelectTrack.call (this, index, event)
+        return;
+    }
+    
+    if (!event.isDown ())
+        return;
+        
+    switch (index)
+    {
+        case 0:
+            this.scales.prevScale ();
+            displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
+            break;
+        case 1:
+            this.scales.nextScale ();
+            displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
+            break;
+        case 2:
+            this.onOctaveDown (event);
+            break;
+        case 3:
+            this.onOctaveUp (event);
+            break;
+    }
+    this.updateNoteMapping ();
+}
+
 PlayView.prototype.onOctaveDown = function (event)
 {
     if (!event.isDown ())
         return;
     this.clearPressedKeys ();
     this.scales.decOctave ();
-    this.updateNoteMapping ();
-    this.surface.getDisplay ().showNotification ('       ' + this.scales.getRangeText ());
+    displayNotification (this.scales.getRangeText ());
 };
 
 PlayView.prototype.onOctaveUp = function (event)
@@ -119,8 +143,7 @@ PlayView.prototype.onOctaveUp = function (event)
         return;
     this.clearPressedKeys ();
     this.scales.incOctave ();
-    this.updateNoteMapping ();
-    this.surface.getDisplay ().showNotification ('       ' + this.scales.getRangeText ());
+    displayNotification (this.scales.getRangeText ());
 };
 
 PlayView.prototype.scrollUp = function (event)
@@ -141,7 +164,7 @@ PlayView.prototype.scrollDown = function (event)
 
 PlayView.prototype.scrollLeft = function (event)
 {
-    if (this.surface.getCurrentMode () == MODE_BANK_DEVICE || this.surface.getCurrentMode () == MODE_PRESET)
+    if (this.surface.getCurrentMode () == MODE_DEVICE)
         this.model.getCursorDevice ().selectPrevious ();
     else
     {
@@ -162,7 +185,7 @@ PlayView.prototype.scrollLeft = function (event)
 
 PlayView.prototype.scrollRight = function (event)
 {
-    if (this.surface.getCurrentMode () == MODE_BANK_DEVICE || this.surface.getCurrentMode () == MODE_PRESET)
+    if (this.surface.getCurrentMode () == MODE_DEVICE)
         this.model.getCursorDevice ().selectNext ();
     else
     {

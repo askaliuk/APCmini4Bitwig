@@ -11,9 +11,14 @@ function Grid (output)
     this.buttonColors = initArray (APC_COLOR_BLACK, this.arraySize);
 }
 
-Grid.prototype.light = function (x, y, color)
+Grid.prototype.light = function (index, color)
 {
-    this.buttonColors[y * 8 + x] = color;
+    this.buttonColors[index] = color;
+};
+
+Grid.prototype.lightEx = function (x, y, color)
+{
+    this.buttonColors[x + 8 * y] = color;
 };
 
 Grid.prototype.flush = function ()
@@ -24,8 +29,7 @@ Grid.prototype.flush = function ()
         if (this.currentButtonColors[i] == this.buttonColors[i])
             continue;
         this.currentButtonColors[i] = this.buttonColors[i];
-        var pos = (7 - Math.floor (i / 8)) * 8 + (i % 8)
-        this.output.sendNote (pos, this.buttonColors[i]);
+        this.output.sendNote (i, this.buttonColors[i]);
         baseChanged = true;
     }
 };

@@ -171,9 +171,9 @@ APC.prototype.handleEvent = function (note, value, channel)
     var event = this.isButton (note) ? new ButtonEvent (this.buttonStates[note]) : null;
     
     // Clip pads
-    if (note < 63)
+    if (note < 64)
     {
-        view.onGridNote (note % 8, 7 - Math.floor (note / 8), new ButtonEvent (value > 0 ? ButtonEvent.DOWN : ButtonEvent.UP));
+        view.onGridNote (36 + note, value);
         return;
     }
         
