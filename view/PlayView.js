@@ -4,7 +4,7 @@
 
 function PlayView (model)
 {
-    BaseView.call (this, model);
+    AbstractView.call (this, model);
     this.scales = model.getScales ();
     this.noteMap = this.scales.getEmptyMatrix ();
     this.pressedKeys = initArray (0, 128);
@@ -28,7 +28,7 @@ function PlayView (model)
 
     this.scrollerInterval = Config.trackScrollInterval;
 }
-PlayView.prototype = new BaseView ();
+PlayView.prototype = new AbstractView ();
 
 PlayView.prototype.updateNoteMapping = function ()
 {
@@ -40,7 +40,7 @@ PlayView.prototype.updateNoteMapping = function ()
 
 PlayView.prototype.onActivate = function ()
 {
-    BaseView.prototype.onActivate.call (this);
+    AbstractView.prototype.onActivate.call (this);
 
     this.model.getCurrentTrackBank ().setIndication (false);
     this.initMaxVelocity ();
@@ -56,7 +56,6 @@ PlayView.prototype.drawGrid = function ()
     
     var t = this.model.getCurrentTrackBank ().getSelectedTrack ();
     var isKeyboardEnabled = t != null && t.canHoldNotes;
-    var transport = this.model.getTransport ();
     var isRecording = this.model.hasRecordingState ();
     for (var i = 36; i < 100; i++)
     {
@@ -101,7 +100,7 @@ PlayView.prototype.onSelectTrack = function (index, event)
 {
     if (this.surface.isShiftPressed ())
     {
-        BaseView.prototype.onSelectTrack.call (this, index, event)
+        AbstractView.prototype.onSelectTrack.call (this, index, event)
         return;
     }
     
@@ -205,7 +204,7 @@ PlayView.prototype.scrollRight = function (event)
 
 PlayView.prototype.onAccent = function (event)
 {
-    BaseView.prototype.onAccent.call (this, event);
+    AbstractView.prototype.onAccent.call (this, event);
     if (event.isUp ())
         this.initMaxVelocity ();
 };

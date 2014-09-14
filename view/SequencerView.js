@@ -27,7 +27,7 @@ SequencerView.prototype.updateArrows = function ()
     this.canScrollDown = this.offsetY - SequencerView.NUM_OCTAVE >= 0;
     this.canScrollLeft = this.offsetX > 0;
     // this.canScrollRight = true; We do not know the number of steps
-    BaseView.prototype.updateArrows.call (this);
+    AbstractView.prototype.updateArrows.call (this);
 };
 
 SequencerView.prototype.updateNoteMapping = function ()
@@ -62,7 +62,7 @@ SequencerView.prototype.onSelectTrack = function (index, event)
 {
     if (this.surface.isShiftPressed ())
     {
-        BaseView.prototype.onSelectTrack.call (this, index, event)
+        AbstractView.prototype.onSelectTrack.call (this, index, event)
         return;
     }
     
@@ -80,10 +80,10 @@ SequencerView.prototype.onSelectTrack = function (index, event)
             displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
             break;
         case 2:
-            this.scrollDown ();
+            this.scrollDown (event);
             break;
         case 3:
-            this.scrollUp ();
+            this.scrollUp (event);
             break;
     }
     this.updateScale ();

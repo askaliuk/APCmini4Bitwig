@@ -11,17 +11,10 @@ var TRACK_STATE_REC_ARM   = 2;
 var TRACK_STATE_MUTE      = 3;
 var TRACK_STATE_SELECT    = 4;
 
-BaseView.trackState = TRACK_STATE_CLIP_STOP;
+AbstractView.trackState = TRACK_STATE_CLIP_STOP;
 
 
-function BaseView (model)
-{
-    AbstractView.call (this, model);
-}
-BaseView.prototype = new AbstractView ();
-BaseView.prototype.constructor = BaseView;
-
-BaseView.prototype.usesButton = function (buttonID)
+AbstractView.prototype.usesButton = function (buttonID)
 {
     switch (buttonID)
     {
@@ -46,9 +39,9 @@ BaseView.prototype.usesButton = function (buttonID)
     return true;
 };
 
-BaseView.prototype.onShift = function (event) {};
+AbstractView.prototype.onShift = function (event) {};
 
-BaseView.prototype.onSelectTrack = function (index, event)
+AbstractView.prototype.onSelectTrack = function (index, event)
 {
     if (this.surface.isShiftPressed ())
     {
@@ -103,7 +96,7 @@ BaseView.prototype.onSelectTrack = function (index, event)
         return;
     }
 
-    switch (BaseView.trackState)
+    switch (AbstractView.trackState)
     {
         case TRACK_STATE_CLIP_STOP:
             if (event.isDown ())
@@ -133,19 +126,19 @@ BaseView.prototype.onSelectTrack = function (index, event)
     }
 };
 
-BaseView.prototype.onScene = function (scene, event)
+AbstractView.prototype.onScene = function (scene, event)
 {
     if (this.surface.isShiftPressed ())
         this.onShiftScene (scene, event);
 };
 
-BaseView.prototype.onShiftScene = function (scene, event)
+AbstractView.prototype.onShiftScene = function (scene, event)
 {
     if (!event.isDown ())
         return;
     
     if (scene < 5)
-        BaseView.trackState = scene;
+        AbstractView.trackState = scene;
     else if (scene == 5)
     {
         this.model.toggleCurrentTrackBank ();
@@ -165,17 +158,17 @@ BaseView.prototype.onShiftScene = function (scene, event)
         this.model.getCurrentTrackBank ().getClipLauncherScenes ().stop ();
 };
 
-BaseView.prototype.onMasterVolume = function (value)
+AbstractView.prototype.onMasterVolume = function (value)
 {
     this.model.getMasterTrack ().setVolume (value);
 };
 
-BaseView.prototype.drawSceneButtons = function ()
+AbstractView.prototype.drawSceneButtons = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
     for (var i = 0; i < 8; i++)
     {
-        switch (BaseView.trackState)
+        switch (AbstractView.trackState)
         {
             case TRACK_STATE_CLIP_STOP:
                 this.surface.setButton (APC_BUTTON_TRACK_BUTTON1 + i, this.surface.isPressed (APC_BUTTON_TRACK_BUTTON1 + i) ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
@@ -198,7 +191,7 @@ BaseView.prototype.drawSceneButtons = function ()
     this.turnOffSceneButtons ();
 };
 
-BaseView.prototype.drawShiftGrid = function (note)
+AbstractView.prototype.drawShiftGrid = function (note)
 {
     // Draw the keyboard
     for (var i = 0; i < 7; i++)
@@ -230,25 +223,25 @@ BaseView.prototype.drawShiftGrid = function (note)
     this.surface.pads.light (38, APC_COLOR_YELLOW);
 
     // Draw the track states on the scene buttons
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON1, BaseView.trackState == TRACK_STATE_CLIP_STOP ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON2, BaseView.trackState == TRACK_STATE_SOLO ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON3, BaseView.trackState == TRACK_STATE_REC_ARM ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON4, BaseView.trackState == TRACK_STATE_MUTE ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.setButton (APC_BUTTON_SCENE_BUTTON5, BaseView.trackState == TRACK_STATE_SELECT ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.setButton (APC_BUTTON_SCENE_BUTTON1, AbstractView.trackState == TRACK_STATE_CLIP_STOP ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.setButton (APC_BUTTON_SCENE_BUTTON2, AbstractView.trackState == TRACK_STATE_SOLO ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.setButton (APC_BUTTON_SCENE_BUTTON3, AbstractView.trackState == TRACK_STATE_REC_ARM ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.setButton (APC_BUTTON_SCENE_BUTTON4, AbstractView.trackState == TRACK_STATE_MUTE ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.setButton (APC_BUTTON_SCENE_BUTTON5, AbstractView.trackState == TRACK_STATE_SELECT ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
     this.surface.setButton (APC_BUTTON_SCENE_BUTTON6, this.model.isEffectTrackBankActive () ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
     this.surface.setButton (APC_BUTTON_SCENE_BUTTON7, APC_BUTTON_STATE_OFF);
     this.surface.setButton (APC_BUTTON_SCENE_BUTTON8, APC_BUTTON_STATE_OFF);
 };
 
-BaseView.prototype.turnOffSceneButtons = function ()
+AbstractView.prototype.turnOffSceneButtons = function ()
 {
     for (var i = APC_BUTTON_SCENE_BUTTON1; i <= APC_BUTTON_SCENE_BUTTON8; i++)
         this.surface.setButton (i, APC_BUTTON_STATE_OFF);
 };
 
-BaseView.TRANSLATE = [0, 2, 4, 6, 1, 3, 5, -1, -1, 10, 8, -1, 11, 9, 7 ];
+AbstractView.TRANSLATE = [0, 2, 4, 6, 1, 3, 5, -1, -1, 10, 8, -1, 11, 9, 7 ];
 
-BaseView.prototype.onShiftGridNote = function (note, velocity)
+AbstractView.prototype.onShiftGridNote = function (note, velocity)
 {
     if (velocity == 0)
         return;
@@ -300,7 +293,7 @@ BaseView.prototype.onShiftGridNote = function (note, velocity)
         default:
             if (index > 15)
                 return;
-            var pos = BaseView.TRANSLATE[index];
+            var pos = AbstractView.TRANSLATE[index];
             this.scales.setScaleOffset (pos);
             displayNotification (Scales.BASES[pos]);
             this.surface.getActiveView ().updateNoteMapping ();
@@ -308,7 +301,7 @@ BaseView.prototype.onShiftGridNote = function (note, velocity)
     }
 };
 
-BaseView.prototype.onNew = function ()
+AbstractView.prototype.onNew = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
     var t = tb.getSelectedTrack ();
@@ -341,7 +334,7 @@ BaseView.prototype.onNew = function ()
 // Protected API
 //--------------------------------------
 
-BaseView.prototype.getSelectedSlot = function (track)
+AbstractView.prototype.getSelectedSlot = function (track)
 {
     for (var i = 0; i < track.slots.length; i++)
         if (track.slots[i].isSelected)

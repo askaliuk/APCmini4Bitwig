@@ -7,7 +7,7 @@ function AbstractSequencerView (model, rows, cols)
     if (!model) // Called on first prototype creation
         return;
         
-    BaseView.call (this, model);
+    AbstractView.call (this, model);
 
     this.resolutions = [ 1, 2/3, 1/2, 1/3, 1/4, 1/6, 1/8, 1/12 ];
     this.resolutionsStr = [ "1/4", "1/4t", "1/8", "1/8t", "1/16", "1/16t", "1/32", "1/32t" ];
@@ -20,11 +20,11 @@ function AbstractSequencerView (model, rows, cols)
     this.clip = this.model.createCursorClip (cols, rows);
     this.clip.setStepLength (this.resolutions[this.selectedIndex]);
 }
-AbstractSequencerView.prototype = new BaseView ();
+AbstractSequencerView.prototype = new AbstractView ();
 
 AbstractSequencerView.prototype.onActivate = function ()
 {
-    BaseView.prototype.onActivate.call (this);
+    AbstractView.prototype.onActivate.call (this);
 
     this.model.getCurrentTrackBank ().setIndication (false);
 };

@@ -4,16 +4,16 @@
 
 function SessionView (model)
 {
-    BaseView.call (this, model);
+    AbstractView.call (this, model);
 
     this.scrollerInterval = Config.sceneScrollInterval;
     this.isTemporary = false;
 }
-SessionView.prototype = new BaseView ();
+SessionView.prototype = new AbstractView ();
 
 SessionView.prototype.onActivate = function ()
 {
-    BaseView.prototype.onActivate.call (this);
+    AbstractView.prototype.onActivate.call (this);
 
     this.model.getCurrentTrackBank ().setIndication (true);
 };
@@ -25,7 +25,7 @@ SessionView.prototype.updateArrows = function ()
     this.canScrollDown = tb.canScrollScenesUp ();
     this.canScrollLeft = tb.canScrollTracksUp ();
     this.canScrollRight = tb.canScrollTracksDown ();
-    BaseView.prototype.updateArrows.call (this);
+    AbstractView.prototype.updateArrows.call (this);
 };
 
 SessionView.prototype.onScene = function (scene, event)

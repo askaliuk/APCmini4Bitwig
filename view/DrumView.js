@@ -11,7 +11,8 @@ function DrumView (model)
     this.offsetY = DrumView.DRUM_START_KEY;
     this.canScrollUp = false;
     this.canScrollDown = false;
-    this.pads = initArray ({ exists: false, solo: false, mute: false }, 16);
+    // TODO: Read the information in Bitwig 1.1
+    this.pads = initArray ({ exists: true, solo: false, mute: false }, 16);
     this.selectedPad = 0;
     this.pressedKeys = initArray (0, 128);
     this.noteMap = this.scales.getEmptyMatrix ();
@@ -33,7 +34,7 @@ DrumView.prototype.updateArrows = function ()
 {
     this.canScrollLeft = this.offsetX > 0;
     // this.canScrollRight = true; We do not know the number of steps
-    BaseView.prototype.updateArrows.call (this);
+    AbstractView.prototype.updateArrows.call (this);
 };
 
 DrumView.prototype.updateNoteMapping = function ()
@@ -79,7 +80,7 @@ DrumView.prototype.onSelectTrack = function (index, event)
 {
     if (this.surface.isShiftPressed ())
     {
-        BaseView.prototype.onSelectTrack.call (this, index, event)
+        AbstractView.prototype.onSelectTrack.call (this, index, event)
         return;
     }
     
@@ -105,8 +106,6 @@ DrumView.prototype.onSelectTrack = function (index, event)
 
 DrumView.prototype.onOctaveDown = function (event)
 {
-    if (!event.isDown ())
-        return;
     this.clearPressedKeys ();
     this.scales.decDrumOctave ();
     this.offsetY = DrumView.DRUM_START_KEY + this.scales.getDrumOctave () * 16;
@@ -116,8 +115,6 @@ DrumView.prototype.onOctaveDown = function (event)
 
 DrumView.prototype.onOctaveUp = function (event)
 {
-    if (!event.isDown ())
-        return;
     this.clearPressedKeys ();
     this.scales.incDrumOctave ();
     this.offsetY = DrumView.DRUM_START_KEY + this.scales.getDrumOctave () * 16;
