@@ -307,10 +307,8 @@ AbstractView.prototype.onNew = function ()
     var t = tb.getSelectedTrack ();
     if (t != null)
     {
-        var slotIndex = this.getSelectedSlot (t);
-        if (slotIndex == -1)
-            slotIndex = 0;
-            
+        var slotIndexes = tb.getSelectedSlots (t.index);
+        var slotIndex = slotIndexes.length == 0 ? 0 : slotIndexes[0].index;
         for (var i = 0; i < 8; i++)
         {
             var sIndex = (slotIndex + i) % 8;
@@ -328,16 +326,4 @@ AbstractView.prototype.onNew = function ()
         }
     }
     displayNotification ("In the current selected grid view there is no empty slot. Please scroll down.");
-};
-
-//--------------------------------------
-// Protected API
-//--------------------------------------
-
-AbstractView.prototype.getSelectedSlot = function (track)
-{
-    for (var i = 0; i < track.slots.length; i++)
-        if (track.slots[i].isSelected)
-            return i;
-    return -1;
 };
