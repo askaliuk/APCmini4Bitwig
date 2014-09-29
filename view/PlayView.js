@@ -100,7 +100,7 @@ PlayView.prototype.onSelectTrack = function (index, event)
 {
     if (this.surface.isShiftPressed ())
     {
-        AbstractView.prototype.onSelectTrack.call (this, index, event)
+        AbstractView.prototype.onSelectTrack.call (this, index, event);
         return;
     }
     
@@ -125,7 +125,7 @@ PlayView.prototype.onSelectTrack = function (index, event)
             break;
     }
     this.updateNoteMapping ();
-}
+};
 
 PlayView.prototype.onOctaveDown = function (event)
 {
@@ -220,4 +220,4 @@ PlayView.prototype.clearPressedKeys = function ()
 {
     for (var i = 0; i < 128; i++)
         this.pressedKeys[i] = 0;
-}
+};

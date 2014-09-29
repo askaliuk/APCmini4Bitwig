@@ -73,7 +73,6 @@ Controller.prototype.updateMode = function (mode)
 Controller.prototype.updateIndication = function (mode)
 {
     var tb = this.model.getCurrentTrackBank ();
-    var selectedTrack = tb.getSelectedTrack ();
     for (var i = 0; i < 8; i++)
     {
         tb.setVolumeIndication (i, mode == MODE_VOLUME);

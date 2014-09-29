@@ -62,7 +62,7 @@ SequencerView.prototype.onSelectTrack = function (index, event)
 {
     if (this.surface.isShiftPressed ())
     {
-        AbstractView.prototype.onSelectTrack.call (this, index, event)
+        AbstractView.prototype.onSelectTrack.call (this, index, event);
         return;
     }
     
@@ -87,7 +87,7 @@ SequencerView.prototype.onSelectTrack = function (index, event)
             break;
     }
     this.updateScale ();
-}
+};
 
 SequencerView.prototype.scrollUp = function (event)
 {

@@ -25,12 +25,10 @@ Grid.prototype.flush = function ()
 {
     for (var i = 0; i < this.arraySize; i++)
     {
-        var baseChanged = false;
         if (this.currentButtonColors[i] == this.buttonColors[i])
             continue;
         this.currentButtonColors[i] = this.buttonColors[i];
         this.output.sendNote (i, this.buttonColors[i]);
-        baseChanged = true;
     }
 };
 
