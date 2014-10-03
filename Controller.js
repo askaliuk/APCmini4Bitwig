@@ -37,10 +37,12 @@ function Controller ()
     Config.addPropertyListener (Config.SCALES_SCALE, doObject (this, function ()
     {
         this.scales.setScaleByName (Config.scale);
+        this.surface.getActiveView ().updateNoteMapping ();
     }));
     Config.addPropertyListener (Config.SCALES_BASE, doObject (this, function ()
     {
         this.scales.setScaleOffsetByName (Config.scaleBase);
+        this.surface.getActiveView ().updateNoteMapping ();
     }));
 
     this.surface.addView (VIEW_PLAY, new PlayView (this.model));
