@@ -191,18 +191,25 @@ AbstractView.prototype.drawSceneButtons = function ()
     this.turnOffSceneButtons ();
 };
 
-AbstractView.prototype.drawShiftGrid = function (note)
+AbstractView.prototype.drawShiftGrid = function ()
 {
     // Draw the keyboard
-    for (var i = 0; i < 7; i++)
-        this.surface.pads.light (i, APC_COLOR_YELLOW);
+    var scaleOffset = this.model.getScales ().getScaleOffset ();
+    // 0'C', 1'G', 2'D', 3'A', 4'E', 5'B', 6'F', 7'Bb', 8'Eb', 9'Ab', 10'Db', 11'Gb'
     for (var i = 7; i < 64; i++)
         this.surface.pads.light (i, APC_COLOR_BLACK);
-    this.surface.pads.light (9, APC_COLOR_RED);
-    this.surface.pads.light (10, APC_COLOR_RED);
-    this.surface.pads.light (12, APC_COLOR_RED);
-    this.surface.pads.light (13, APC_COLOR_RED);
-    this.surface.pads.light (14, APC_COLOR_RED);
+    this.surface.pads.light (0, scaleOffset == 0 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (1, scaleOffset == 2 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (2, scaleOffset == 4 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (3, scaleOffset == 6 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (4, scaleOffset == 1 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (5, scaleOffset == 3 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (6, scaleOffset == 5 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (9, scaleOffset == 10 ? APC_COLOR_GREEN : APC_COLOR_RED);
+    this.surface.pads.light (10, scaleOffset == 8 ? APC_COLOR_GREEN : APC_COLOR_RED);
+    this.surface.pads.light (12, scaleOffset == 11 ? APC_COLOR_GREEN : APC_COLOR_RED);
+    this.surface.pads.light (13, scaleOffset == 9 ? APC_COLOR_GREEN : APC_COLOR_RED);
+    this.surface.pads.light (14, scaleOffset == 7 ? APC_COLOR_GREEN : APC_COLOR_RED);
     
     // Draw the view selection: Session, Note, Drum, Sequencer
     this.surface.pads.light (56, this.surface.isActiveView (VIEW_SESSION) ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
@@ -239,7 +246,7 @@ AbstractView.prototype.turnOffSceneButtons = function ()
         this.surface.setButton (i, APC_BUTTON_STATE_OFF);
 };
 
-AbstractView.TRANSLATE = [0, 2, 4, 6, 1, 3, 5, -1, -1, 10, 8, -1, 11, 9, 7 ];
+AbstractView.TRANSLATE = [ 0, 2, 4, 6, 1, 3, 5, -1, -1, 10, 8, -1, 11, 9, 7, -1 ];
 
 AbstractView.prototype.onShiftGridNote = function (note, velocity)
 {
@@ -294,7 +301,10 @@ AbstractView.prototype.onShiftGridNote = function (note, velocity)
             if (index > 15)
                 return;
             var pos = AbstractView.TRANSLATE[index];
-            this.scales.setScaleOffset (pos);
+            if (pos == -1)
+                return;
+            this.model.getScales ().setScaleOffset (pos);
+            Config.setScaleBase (Scales.BASES[pos]);
             displayNotification (Scales.BASES[pos]);
             this.surface.getActiveView ().updateNoteMapping ();
             break;

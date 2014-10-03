@@ -53,7 +53,7 @@ PlayView.prototype.drawGrid = function ()
         this.drawShiftGrid ();
         return;
     }
-    
+
     var t = this.model.getCurrentTrackBank ().getSelectedTrack ();
     var isKeyboardEnabled = t != null && t.canHoldNotes;
     var isRecording = this.model.hasRecordingState ();
@@ -111,10 +111,12 @@ PlayView.prototype.onSelectTrack = function (index, event)
     {
         case 0:
             this.scales.prevScale ();
+            Config.setScale (this.scales.getName (this.scales.getSelectedScale ()));
             displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
             break;
         case 1:
             this.scales.nextScale ();
+            Config.setScale (this.scales.getName (this.scales.getSelectedScale ()));
             displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
             break;
         case 2:

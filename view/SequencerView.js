@@ -26,8 +26,7 @@ SequencerView.prototype.updateArrows = function ()
     this.canScrollUp = this.offsetY + SequencerView.NUM_OCTAVE <= this.clip.getRowSize () - SequencerView.NUM_OCTAVE;
     this.canScrollDown = this.offsetY - SequencerView.NUM_OCTAVE >= 0;
     this.canScrollLeft = this.offsetX > 0;
-    // this.canScrollRight = true; We do not know the number of steps
-    AbstractView.prototype.updateArrows.call (this);
+    this.canScrollRight = true; // TODO We do not know the number of steps
 };
 
 SequencerView.prototype.updateNoteMapping = function ()
@@ -73,10 +72,12 @@ SequencerView.prototype.onSelectTrack = function (index, event)
     {
         case 0:
             this.scales.prevScale ();
+            Config.setScale (this.scales.getName (this.scales.getSelectedScale ()));
             displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
             break;
         case 1:
             this.scales.nextScale ();
+            Config.setScale (this.scales.getName (this.scales.getSelectedScale ()));
             displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
             break;
         case 2:

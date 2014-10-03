@@ -21,11 +21,10 @@ SessionView.prototype.onActivate = function ()
 SessionView.prototype.updateArrows = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
-    this.canScrollUp = tb.canScrollScenesDown ();
-    this.canScrollDown = tb.canScrollScenesUp ();
+    this.canScrollUp = tb.canScrollScenesUp ();
+    this.canScrollDown = tb.canScrollScenesDown ();
     this.canScrollLeft = tb.canScrollTracksUp ();
     this.canScrollRight = tb.canScrollTracksDown ();
-    AbstractView.prototype.updateArrows.call (this);
 };
 
 SessionView.prototype.onScene = function (scene, event)
