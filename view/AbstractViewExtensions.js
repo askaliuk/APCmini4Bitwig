@@ -268,6 +268,7 @@ AbstractView.prototype.drawShiftGrid = function ()
     this.surface.pads.light (57, this.surface.isActiveView (VIEW_PLAY) ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
     this.surface.pads.light (58, this.surface.isActiveView (VIEW_DRUM) ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
     this.surface.pads.light (59, this.surface.isActiveView (VIEW_SEQUENCER) ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (60, this.surface.isActiveView (VIEW_RAINDROPS) ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
     
     // Draw transport
     var transport = this.model.getTransport ();
@@ -320,6 +321,9 @@ AbstractView.prototype.onShiftGridNote = function (note, velocity)
             break;
         case 59:
             this.surface.setActiveView (VIEW_SEQUENCER);
+            break;
+        case 60:
+            this.surface.setActiveView (VIEW_RAINDROPS);
             break;
 
         // Last row transport
@@ -388,4 +392,10 @@ AbstractView.prototype.onNew = function ()
         }
     }
     displayNotification ("In the current selected grid view there is no empty slot. Please scroll down.");
+};
+
+AbstractView.prototype.canSelectedTrackHoldNotes = function ()
+{
+    var t = this.model.getCurrentTrackBank ().getSelectedTrack ();
+    return t != null && t.canHoldNotes;
 };

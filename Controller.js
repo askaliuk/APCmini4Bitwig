@@ -12,11 +12,9 @@ function Controller ()
     
     this.scales = new Scales (36, 100, 8, 8);
     this.model = new Model (null, this.scales, 8, 8, 8);
-    this.model.getTrackBank ().addTrackSelectionListener (doObject (this, function (index, isSelected)
-    {
-        if (this.surface.isActiveView (VIEW_PLAY))
-            this.surface.getActiveView ().updateNoteMapping ();
-    }));
+    
+    this.lastSlotSelection = null;
+    this.model.getTrackBank ().addTrackSelectionListener (doObject (this, Controller.prototype.handleTrackChange));
     
     this.surface = new APC (output, input);
     this.surface.setDefaultMode (MODE_VOLUME);
@@ -49,6 +47,7 @@ function Controller ()
     this.surface.addView (VIEW_SESSION, new SessionView (this.model));
     this.surface.addView (VIEW_SEQUENCER, new SequencerView (this.model));
     this.surface.addView (VIEW_DRUM, new DrumView (this.model));
+    this.surface.addView (VIEW_RAINDROPS, new RaindropsView (this.model));
     
     this.surface.setActiveView (VIEW_SESSION);
     this.surface.setPendingMode (MODE_VOLUME);
@@ -104,5 +103,27 @@ Controller.prototype.updateIndication = function (mode)
         var cd = this.model.getCursorDevice ();
         cd.getParameter (i).setIndication (mode == MODE_DEVICE);
         cd.getMacro (i).getAmount ().setIndication (mode == MODE_MACRO);
+    }
+};
+
+Controller.prototype.handleTrackChange = function (index, isSelected)
+{
+    var tb = this.model.getCurrentTrackBank ();
+    if (!isSelected)
+    {
+        this.lastSlotSelection = tb.getSelectedSlot (index);
+        return;
+    }
+
+    if (this.surface.isActiveView (VIEW_PLAY))
+        this.surface.getActiveView ().updateNoteMapping ();
+     
+    // Select the slot on the new track with the same index as on the previous track
+    if (this.lastSlotSelection != null)
+        tb.showClipInEditor (index, this.lastSlotSelection.index);
+    else
+    {
+        var slot = tb.getSelectedSlot (index);
+        tb.showClipInEditor (index, slot != null ? slot.index : 0);
     }
 };

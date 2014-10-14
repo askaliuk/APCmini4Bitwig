@@ -40,8 +40,7 @@ DrumView.prototype.updateArrows = function ()
 
 DrumView.prototype.updateNoteMapping = function ()
 {
-    var t = this.model.getCurrentTrackBank ().getSelectedTrack ();
-    this.noteMap = t != null && t.canHoldNotes && !this.surface.isSelectPressed () ? this.scales.getDrumMatrix () : this.scales.getEmptyMatrix ();
+    this.noteMap = this.canSelectedTrackHoldNotes () && !this.surface.isSelectPressed () ? this.scales.getDrumMatrix () : this.scales.getEmptyMatrix ();
     this.surface.setKeyTranslationTable (this.noteMap);
 };
 
@@ -52,6 +51,9 @@ DrumView.prototype.onGridNote = function (note, velocity)
         this.onShiftGridNote (note, velocity);
         return;
     }
+
+    if (!this.canSelectedTrackHoldNotes ())
+        return;
 
     var index = note - 36;
     var x = index % 8;
@@ -91,11 +93,13 @@ DrumView.prototype.onGridNote = function (note, velocity)
         var start = this.loopPadPressed < pad ? this.loopPadPressed : pad;
         var end   = (this.loopPadPressed < pad ? pad : this.loopPadPressed) + 1;
         var quartersPerPad = this.model.getQuartersPerMeasure ();
+
         // Set a new loop between the 2 selected pads
-        this.clip.setLoopStart (start * quartersPerPad);
+        var newStart = start * quartersPerPad;
+        this.clip.setLoopStart (newStart);
         this.clip.setLoopLength ((end - start) * quartersPerPad);
-        this.clip.setPlayStart (start * quartersPerPad);
-        this.clip.setPlayEnd (end * quartersPerPad);
+        this.clip.setPlayRange (newStart, end * quartersPerPad);
+
         this.loopPadPressed = -1;
     }
 };
@@ -158,6 +162,12 @@ DrumView.prototype.drawGrid = function ()
         return;
     }
     
+    if (!this.canSelectedTrackHoldNotes ())
+    {
+        this.surface.pads.turnOff ();
+        return;
+    }
+
     var isRecording = this.model.hasRecordingState ();
 
     // 4x4 Drum Pad Grid
