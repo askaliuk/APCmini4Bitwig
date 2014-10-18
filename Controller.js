@@ -42,6 +42,56 @@ function Controller ()
         this.scales.setScaleOffsetByName (Config.scaleBase);
         this.surface.getActiveView ().updateNoteMapping ();
     }));
+    Config.addPropertyListener (Config.FADER_CTRL, doObject (this, function ()
+    {
+        switch (Config.faderCtrl)
+        {
+            case 'Volume':
+                this.surface.setPendingMode (MODE_VOLUME);
+                break;
+            case 'Pan':
+                this.surface.setPendingMode (MODE_PAN);
+                break;
+            case 'Send 1': 
+                this.surface.setPendingMode (MODE_SEND1);
+                break;
+            case 'Send 2': 
+                this.surface.setPendingMode (MODE_SEND2);
+                break;
+            case 'Send 3': 
+                this.surface.setPendingMode (MODE_SEND3);
+                break;
+            case 'Send 4': 
+                this.surface.setPendingMode (MODE_SEND4);
+                break;
+            case 'Send 5': 
+                this.surface.setPendingMode (MODE_SEND5);
+                break;
+            case 'Send 6': 
+                this.surface.setPendingMode (MODE_SEND6);
+                break;
+            case 'Send 7': 
+                this.surface.setPendingMode (MODE_SEND7);
+                break;
+            case 'Send 8': 
+                this.surface.setPendingMode (MODE_SEND8);
+                break;
+            case 'Device': 
+                this.surface.setPendingMode (MODE_DEVICE);
+                break;
+            case 'Macros':
+                this.surface.setPendingMode (MODE_MACRO);
+                break;
+        }
+    }));
+    Config.addPropertyListener (Config.SOFT_KEYS, doObject (this, function ()
+    {
+        for (var i = 0; i < Config.SOFT_KEYS_OPTIONS.length; i++)
+        {
+            if (Config.SOFT_KEYS_OPTIONS[i] == Config.softKeys)
+                AbstractView.trackState = i;
+        }
+    }));
 
     this.surface.addView (VIEW_PLAY, new PlayView (this.model));
     this.surface.addView (VIEW_SESSION, new SessionView (this.model));

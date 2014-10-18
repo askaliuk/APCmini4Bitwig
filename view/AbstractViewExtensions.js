@@ -118,10 +118,14 @@ AbstractView.prototype.onSelectTrack = function (index, event)
         
             case 4:
                 this.surface.setPendingMode (MODE_VOLUME);
+                Config.setFaderCtrl ("Volume");
+                displayNotification ("Volume");
                 break;
 
             case 5:
                 this.surface.setPendingMode (MODE_PAN);
+                Config.setFaderCtrl ("Pan");
+                displayNotification ("Pan");
                 break;
 
             case 6:
@@ -136,13 +140,24 @@ AbstractView.prototype.onSelectTrack = function (index, event)
                 if (mode >= MODE_SEND1 && mode <= MODE_SEND8 && (fxTrackBank != null && !fxTrackBank.getTrack (mode - MODE_SEND1).exists))
                     mode = MODE_SEND1;
                 this.surface.setPendingMode (mode);
+                var name = "Send " + (mode - MODE_SEND1 + 1);
+                Config.setFaderCtrl (name);
+                displayNotification (name);
                 break;
 
             case 7:
                 if (this.surface.getCurrentMode () == MODE_DEVICE)
+                {
                     this.surface.setPendingMode (MODE_MACRO);
+                    Config.setFaderCtrl ("Macro");
+                    displayNotification ("Macro");
+                }
                 else
+                {
                     this.surface.setPendingMode (MODE_DEVICE);
+                    Config.setFaderCtrl ("Device");
+                    displayNotification ("Device");
+                }
                 break;
         }
         return;
@@ -190,7 +205,11 @@ AbstractView.prototype.onShiftScene = function (scene, event)
         return;
     
     if (scene < 5)
+    {
         AbstractView.trackState = scene;
+        Config.setSoftKeys (Config.SOFT_KEYS_OPTIONS[scene]);
+        displayNotification (Config.SOFT_KEYS_OPTIONS[scene]);
+    }
     else if (scene == 5)
     {
         this.model.toggleCurrentTrackBank ();
