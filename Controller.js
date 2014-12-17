@@ -8,7 +8,6 @@ function Controller ()
 
     var output = new MidiOutput ();
     var input = new APCMidiInput ();
-    input.init ();
     
     this.scales = new Scales (36, 100, 8, 8);
     this.model = new Model (null, this.scales, 8, 8, 8);
