@@ -62,13 +62,12 @@ SessionView.prototype.onGridNote = function (note, velocity)
     var tb = this.model.getCurrentTrackBank ();
     var slot = tb.getTrack (channel).slots[scene];
     var slots = tb.getClipLauncherSlots (channel);
-    
+
     if (tb.getTrack (channel).recarm)
     {
-        if (slot.isRecording)
-            slots.launch (scene);
-        else
+        if (!slot.isRecording)
             slots.record (scene);
+        slots.launch (scene);
     }
     else
         slots.launch (scene);
