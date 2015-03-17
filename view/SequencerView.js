@@ -122,16 +122,19 @@ SequencerView.prototype.onSelectTrack = function (index, event)
 
 SequencerView.prototype.scrollUp = function (event)
 {
-    this.offsetY = Math.min (this.clip.getRowSize () - SequencerView.NUM_OCTAVE, this.offsetY + SequencerView.NUM_OCTAVE);
-    this.updateScale ();
-    displayNotification (this.scales.getSequencerRangeText (this.noteMap[0], this.noteMap[7]));
+    this.updateOctave (Math.min (this.clip.getRowSize () - SequencerView.NUM_OCTAVE, this.offsetY + SequencerView.NUM_OCTAVE));
 };
 
 SequencerView.prototype.scrollDown = function (event)
 {
-    this.offsetY = Math.max (0, this.offsetY - SequencerView.NUM_OCTAVE);
+    this.updateOctave (Math.max (0, this.offsetY - SequencerView.NUM_OCTAVE));
+};
+
+SequencerView.prototype.updateOctave = function (value)
+{
+    this.offsetY = value;
     this.updateScale ();
-    displayNotification (this.scales.getSequencerRangeText (this.noteMap[0], this.noteMap[7]));
+    displayNotification (this.scales.getSequencerRangeText (this.noteMap[0], this.noteMap[6]));
 };
 
 SequencerView.prototype.drawGrid = function ()
