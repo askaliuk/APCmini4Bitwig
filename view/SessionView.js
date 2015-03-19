@@ -21,10 +21,10 @@ SessionView.prototype.onActivate = function ()
 SessionView.prototype.updateArrows = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
-    this.canScrollUp = tb.canScrollScenesUp ();
-    this.canScrollDown = tb.canScrollScenesDown ();
-    this.canScrollLeft = tb.canScrollTracksUp ();
-    this.canScrollRight = tb.canScrollTracksDown ();
+    this.canScrollUp = tb.canScrollTracksUp ();
+    this.canScrollDown = tb.canScrollTracksDown ();
+    this.canScrollLeft = tb.canScrollScenesUp ();
+    this.canScrollRight = tb.canScrollScenesDown ();
 };
 
 SessionView.prototype.onScene = function (scene, event)
@@ -72,42 +72,6 @@ SessionView.prototype.onGridNote = function (note, velocity)
     else
         slots.launch (scene);
     slots.select (scene);
-};
-
-SessionView.prototype.scrollLeft = function (event)
-{
-    var tb = this.model.getCurrentTrackBank ();
-    if (this.surface.isShiftPressed ())
-        tb.scrollTracksPageUp ();
-    else
-        tb.scrollTracksUp ();
-};
-
-SessionView.prototype.scrollRight = function (event)
-{
-    var tb = this.model.getCurrentTrackBank ();
-    if (this.surface.isShiftPressed ())
-        tb.scrollTracksPageDown ();
-    else
-        tb.scrollTracksDown ();
-};
-
-SessionView.prototype.scrollUp = function (event)
-{
-    var tb = this.model.getCurrentTrackBank ();
-    if (this.surface.isShiftPressed ())
-        tb.scrollScenesPageUp ();
-    else
-        tb.scrollScenesUp ();
-};
-
-SessionView.prototype.scrollDown = function (event)
-{
-    var tb = this.model.getCurrentTrackBank ();
-    if (this.surface.isShiftPressed ())
-        tb.scrollScenesPageDown ();
-    else
-        tb.scrollScenesDown ();
 };
 
 SessionView.prototype.drawGrid = function ()

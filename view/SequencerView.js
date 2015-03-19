@@ -26,8 +26,9 @@ SequencerView.prototype.onActivate = function ()
 
 SequencerView.prototype.updateArrows = function ()
 {
-    this.canScrollUp = this.offsetY + SequencerView.NUM_OCTAVE <= this.clip.getRowSize () - SequencerView.NUM_OCTAVE;
-    this.canScrollDown = this.offsetY - SequencerView.NUM_OCTAVE >= 0;
+    var tb = this.model.getCurrentTrackBank ();
+    this.canScrollUp = tb.canScrollTracksUp ();
+    this.canScrollDown = tb.canScrollTracksDown ();
     this.canScrollLeft = this.offsetX > 0;
     this.canScrollRight = true; // TODO FIX We do not know the number of steps
 };
@@ -118,16 +119,6 @@ SequencerView.prototype.onSelectTrack = function (index, event)
             break;
     }
     this.updateScale ();
-};
-
-SequencerView.prototype.scrollUp = function (event)
-{
-    this.updateOctave (Math.min (this.clip.getRowSize () - SequencerView.NUM_OCTAVE, this.offsetY + SequencerView.NUM_OCTAVE));
-};
-
-SequencerView.prototype.scrollDown = function (event)
-{
-    this.updateOctave (Math.max (0, this.offsetY - SequencerView.NUM_OCTAVE));
 };
 
 SequencerView.prototype.updateOctave = function (value)

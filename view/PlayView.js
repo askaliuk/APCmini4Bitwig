@@ -30,19 +30,28 @@ function PlayView (model)
 }
 PlayView.prototype = new AbstractView ();
 
+PlayView.prototype.onActivate = function ()
+{
+    AbstractView.prototype.onActivate.call (this);
+
+    this.model.getCurrentTrackBank ().setIndication (true);
+    this.initMaxVelocity ();
+};
+
+PlayView.prototype.updateArrows = function ()
+{
+    var tb = this.model.getCurrentTrackBank ();
+    this.canScrollUp = tb.canScrollTracksUp ();
+    this.canScrollDown = tb.canScrollTracksDown ();
+    this.canScrollLeft = tb.canScrollScenesUp ();
+    this.canScrollRight = tb.canScrollScenesDown ();
+};
+
 PlayView.prototype.updateNoteMapping = function ()
 {
     this.noteMap = this.canSelectedTrackHoldNotes () ? this.scales.getNoteMatrix () : this.scales.getEmptyMatrix ();
     // Workaround: https://github.com/git-moss/Push4Bitwig/issues/7
     scheduleTask (doObject (this, function () { this.surface.setKeyTranslationTable (this.noteMap); }), null, 100);
-};
-
-PlayView.prototype.onActivate = function ()
-{
-    AbstractView.prototype.onActivate.call (this);
-
-    this.model.getCurrentTrackBank ().setIndication (false);
-    this.initMaxVelocity ();
 };
 
 PlayView.prototype.drawGrid = function ()
@@ -142,22 +151,6 @@ PlayView.prototype.onOctaveUp = function (event)
     this.clearPressedKeys ();
     this.scales.incOctave ();
     displayNotification (this.scales.getRangeText ());
-};
-
-PlayView.prototype.scrollUp = function (event)
-{
-    if (this.surface.isShiftPressed ())
-        this.model.getApplication ().arrowKeyLeft ();
-    else
-        this.model.getApplication ().arrowKeyUp ();
-};
-
-PlayView.prototype.scrollDown = function (event)
-{
-    if (this.surface.isShiftPressed ())
-        this.model.getApplication ().arrowKeyRight ();
-    else
-        this.model.getApplication ().arrowKeyDown ();
 };
 
 PlayView.prototype.onAccent = function (event)

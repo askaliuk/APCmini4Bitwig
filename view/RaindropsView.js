@@ -23,10 +23,11 @@ RaindropsView.prototype.onActivate = function ()
     AbstractSequencerView.prototype.onActivate.call (this);
 };
 
-RaindropsView.prototype.updateArrowStates = function ()
+RaindropsView.prototype.updateArrows = function ()
 {
-    this.canScrollUp = false;
-    this.canScrollDown = false;
+    var tb = this.model.getCurrentTrackBank ();
+    this.canScrollUp = tb.canScrollTracksUp ();
+    this.canScrollDown = tb.canScrollTracksDown ();
     this.canScrollLeft = this.offsetY - RaindropsView.NUM_OCTAVE >= 0;
     this.canScrollRight = this.offsetY + RaindropsView.NUM_OCTAVE <= this.clip.getRowSize () - RaindropsView.NUM_OCTAVE;
 
@@ -77,18 +78,6 @@ RaindropsView.prototype.onScene = function (index, event)
     this.ongoingResolutionChange = true;
     AbstractSequencerView.prototype.onScene.call (this, index, event);
     this.ongoingResolutionChange = false;    
-};
-
-RaindropsView.prototype.onOctaveDown = function (event)
-{
-    if (event.isDown ())
-        this.scrollDown (event);
-};
-
-RaindropsView.prototype.onOctaveUp = function (event)
-{
-    if (event.isDown ())
-        this.scrollUp (event);
 };
 
 RaindropsView.prototype.scrollRight = function (event)
@@ -229,8 +218,10 @@ RaindropsView.prototype.onSelectTrack = function (index, event)
             displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
             break;
         case 2:
+            this.scrollLeft (event);
             break;
         case 3:
+            this.scrollRight (event);
             break;
     }
     this.updateScale ();

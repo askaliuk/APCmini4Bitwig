@@ -9,8 +9,6 @@ function DrumView (model)
 {
     AbstractSequencerView.call (this, model, 128, DrumView.NUM_DISPLAY_COLS);
     this.offsetY = DrumView.DRUM_START_KEY;
-    this.canScrollUp = false;
-    this.canScrollDown = false;
     this.selectedPad = 0;
     this.pressedKeys = initArray (0, 128);
     this.noteMap = this.scales.getEmptyMatrix ();
@@ -30,8 +28,11 @@ function DrumView (model)
 }
 DrumView.prototype = new AbstractSequencerView ();
 
-DrumView.prototype.updateArrowStates = function ()
+DrumView.prototype.updateArrows = function ()
 {
+    var tb = this.model.getCurrentTrackBank ();
+    this.canScrollUp = tb.canScrollTracksUp ();
+    this.canScrollDown = tb.canScrollTracksDown ();
     this.canScrollLeft = this.offsetX > 0;
     this.canScrollRight = true; // TODO API extension required - We do not know the number of steps
 };

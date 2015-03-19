@@ -26,7 +26,7 @@ AbstractSequencerView.prototype.onActivate = function ()
 {
     AbstractView.prototype.onActivate.call (this);
 
-    this.model.getCurrentTrackBank ().setIndication (false);
+    this.model.getCurrentTrackBank ().setIndication (true);
 };
 
 AbstractSequencerView.prototype.scrollLeft = function (event)
