@@ -157,7 +157,6 @@ Controller.prototype.updateIndication = function (mode)
 
 Controller.prototype.handleTrackChange = function (index, isSelected)
 {
-    var tb = this.model.getCurrentTrackBank ();
     if (!isSelected)
         return;
 
