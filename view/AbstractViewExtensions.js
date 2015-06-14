@@ -249,6 +249,13 @@ AbstractView.prototype.drawShiftGrid = function ()
     this.surface.pads.light (12, scaleOffset == 11 ? APC_COLOR_GREEN : APC_COLOR_RED);
     this.surface.pads.light (13, scaleOffset == 9 ? APC_COLOR_GREEN : APC_COLOR_RED);
     this.surface.pads.light (14, scaleOffset == 7 ? APC_COLOR_GREEN : APC_COLOR_RED);
+
+    // Device Parameters up/down
+    this.surface.pads.light (24, APC_COLOR_YELLOW);
+    this.surface.pads.light (25, APC_COLOR_YELLOW);
+    // Device up/down
+    this.surface.pads.light (32, APC_COLOR_GREEN);
+    this.surface.pads.light (33, APC_COLOR_GREEN);
     
     // Draw the view selection: Session, Note, Drum, Sequencer
     this.surface.pads.light (56, this.surface.isActiveView (VIEW_SESSION) ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
@@ -327,6 +334,7 @@ AbstractView.prototype.onShiftGridNote = function (note, velocity)
             this.model.getTransport ().toggleClick ();
             break;
 
+        // Navigation
         case 62:
             this.onNew ();
             break;
@@ -340,6 +348,23 @@ AbstractView.prototype.onShiftGridNote = function (note, velocity)
             this.model.getApplication ().undo ();
             break;
             
+        // Device Parameters up/down
+        case 24:
+            this.model.getCursorDevice ().previousParameterPage ();
+            break;
+        case 25:
+            this.model.getCursorDevice ().nextParameterPage ();
+            break;
+
+        // Device up/down
+        case 32:
+            this.model.getCursorDevice ().selectPrevious ();
+            break;
+        case 33:
+            this.model.getCursorDevice ().selectNext ();
+            break;
+            
+        // Scale Base note selection
         default:
             if (index > 15)
                 return;
