@@ -112,10 +112,10 @@ SequencerView.prototype.onSelectTrack = function (index, event)
             displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
             break;
         case 2:
-            this.scrollDown (event);
+            this.updateOctave (Math.max (0, this.offsetY - SequencerView.NUM_OCTAVE));
             break;
         case 3:
-            this.scrollUp (event);
+            this.updateOctave (Math.min (this.clip.getRowSize () - SequencerView.NUM_OCTAVE, this.offsetY + SequencerView.NUM_OCTAVE));
             break;
     }
     this.updateScale ();
