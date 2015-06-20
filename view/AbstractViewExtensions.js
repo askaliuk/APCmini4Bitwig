@@ -181,18 +181,18 @@ AbstractView.prototype.onShiftScene = function (scene, event)
     else if (scene == 5)
     {
         this.model.toggleCurrentTrackBank ();
-        if (this.model.isEffectTrackBankActive ())
+        var isEffectTrackBank = this.model.isEffectTrackBankActive ();
+        if (isEffectTrackBank)
         {
             // No Sends on effect tracks
             var mode = this.surface.getCurrentMode ();
             if (mode >= MODE_SEND1 && mode <= MODE_SEND8)
                 this.surface.setPendingMode (MODE_VOLUME);
         }
+        displayNotification (isEffectTrackBank ? "Effect Tracks" : "Instrument/Audio Tracks");
     }
     else if (scene == 6)
-    {
-        // Not used yet
-    }
+        this.model.getCursorDevice ().toggleWindowOpen ();
     else if (scene == 7)
         this.model.getCurrentTrackBank ().getClipLauncherScenes ().stop ();
 };
