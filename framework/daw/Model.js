@@ -3,7 +3,7 @@
 // (c) 2014-2015
 // Licensed under LGPLv3 - http://www.gnu.org/licenses/lgpl-3.0.txt
 
-function Model (userCCStart, scales, numTracks, numScenes, numSends)
+function Model (userCCStart, scales, numTracks, numScenes, numSends, numFilterColumns, numFilterColumnEntries, numResults, hasFlatTrackList)
 {
     if (scales == null)
         return;
@@ -11,12 +11,16 @@ function Model (userCCStart, scales, numTracks, numScenes, numSends)
     this.numTracks = numTracks ? numTracks : 8;
     this.numScenes = numScenes ? numScenes : 8;
     this.numSends  = numSends  ? numSends  : 6;
+    this.numFilterColumns       = numFilterColumns ? numFilterColumns : 6;
+    this.numFilterColumnEntries = numFilterColumnEntries ? numFilterColumnEntries : 16;
+    this.numResults             = numResults ? numResults : 16;
+    this.hasFlatTrackList       = hasFlatTrackList ? true : false;
 
     this.application = new ApplicationProxy ();
     this.transport = new TransportProxy ();
     this.groove = new GrooveProxy ();
     this.masterTrack = new MasterTrackProxy ();
-    this.trackBank = new TrackBankProxy (this.numTracks, this.numScenes, this.numSends);
+    this.trackBank = new TrackBankProxy (this.numTracks, this.numScenes, this.numSends, this.hasFlatTrackList);
     this.effectTrackBank = new EffectTrackBankProxy (this.numTracks, this.numScenes, this.trackBank);
     this.userControlBank = new UserControlBankProxy (userCCStart);
 
@@ -24,6 +28,8 @@ function Model (userCCStart, scales, numTracks, numScenes, numSends)
     this.arranger = new ArrangerProxy ();
     this.mixer = new MixerProxy ();
     this.sceneBank = new SceneBankProxy (this.numScenes);
+    
+    this.browser = new BrowserProxy (this.cursorDevice, this.numFilterColumns, this.numFilterColumnEntries, this.numResults);
 
     this.currentTrackBank = this.trackBank;
 
@@ -126,6 +132,14 @@ Model.prototype.getApplication = function ()
 Model.prototype.getSceneBank = function ()
 {
     return this.sceneBank;
+};
+
+/**
+ * @returns {BrowserProxy}
+ */
+Model.prototype.getBrowser = function ()
+{
+    return this.browser;
 };
 
 /**
