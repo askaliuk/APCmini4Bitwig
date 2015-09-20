@@ -172,29 +172,32 @@ AbstractView.prototype.onShiftScene = function (scene, event)
     if (!event.isDown ())
         return;
     
-    if (scene < 5)
+    switch (scene)
     {
-        AbstractView.trackState = scene;
-        Config.setSoftKeys (Config.SOFT_KEYS_OPTIONS[scene]);
-        displayNotification (Config.SOFT_KEYS_OPTIONS[scene]);
+        case 5:
+            this.model.toggleCurrentTrackBank ();
+            var isEffectTrackBank = this.model.isEffectTrackBankActive ();
+            if (isEffectTrackBank)
+            {
+                // No Sends on effect tracks
+                var mode = this.surface.getCurrentMode ();
+                if (mode >= MODE_SEND1 && mode <= MODE_SEND8)
+                    this.surface.setPendingMode (MODE_VOLUME);
+            }
+            displayNotification (isEffectTrackBank ? "Effect Tracks" : "Instrument/Audio Tracks");
+            break;
+        case 6:
+            this.model.getCursorDevice ().toggleWindowOpen ();
+            break;
+        case 7:
+            this.model.getCurrentTrackBank ().getClipLauncherScenes ().stop ();
+            break;
+        default:
+            AbstractView.trackState = scene;
+            Config.setSoftKeys (Config.SOFT_KEYS_OPTIONS[scene]);
+            displayNotification (Config.SOFT_KEYS_OPTIONS[scene]);
+            break;
     }
-    else if (scene == 5)
-    {
-        this.model.toggleCurrentTrackBank ();
-        var isEffectTrackBank = this.model.isEffectTrackBankActive ();
-        if (isEffectTrackBank)
-        {
-            // No Sends on effect tracks
-            var mode = this.surface.getCurrentMode ();
-            if (mode >= MODE_SEND1 && mode <= MODE_SEND8)
-                this.surface.setPendingMode (MODE_VOLUME);
-        }
-        displayNotification (isEffectTrackBank ? "Effect Tracks" : "Instrument/Audio Tracks");
-    }
-    else if (scene == 6)
-        this.model.getCursorDevice ().toggleWindowOpen ();
-    else if (scene == 7)
-        this.model.getCurrentTrackBank ().getClipLauncherScenes ().stop ();
 };
 
 AbstractView.prototype.onMasterVolume = function (value)
@@ -306,62 +309,79 @@ AbstractView.prototype.onShiftGridNote = function (note, velocity)
         // Flip views
         case 56:
             this.surface.setActiveView (VIEW_SESSION);
+            displayNotification ("Session");
             break;
         case 57: 
             this.surface.setActiveView (VIEW_PLAY);
+            displayNotification ("Play");
             break;
         case 58:
             this.surface.setActiveView (VIEW_DRUM);
+            displayNotification ("Drum");
             break;
         case 59:
             this.surface.setActiveView (VIEW_SEQUENCER);
+            displayNotification ("Sequencer");
             break;
         case 60:
             this.surface.setActiveView (VIEW_RAINDROPS);
+            displayNotification ("Raindrops");
             break;
 
         // Last row transport
         case 63:
             this.model.getTransport ().play ();
+            displayNotification ("Play");
             break;
         case 55:
             this.model.getTransport ().record ();
+            displayNotification ("Record");
             break;
         case 47:
             this.model.getTransport ().toggleLoop ();
+            displayNotification ("Toggle Loop");
             break;
         case 39:
             this.model.getTransport ().toggleClick ();
+            displayNotification ("Toggle Click");
             break;
 
         // Navigation
         case 62:
             this.onNew ();
+            displayNotification ("New clip");
             break;
         case 54:
             this.model.getTransport ().toggleLauncherOverdub ();
+            displayNotification ("Toggle Launcher Overdub");
             break;
         case 46:
             this.model.getApplication ().quantize ();
+            displayNotification ("Quantize");
             break;
         case 38:
             this.model.getApplication ().undo ();
+            displayNotification ("Undo");
             break;
             
         // Device Parameters up/down
         case 24:
             this.model.getCursorDevice ().previousParameterPage ();
+            displayNotification ("Previous Parameter Page");
             break;
         case 25:
             this.model.getCursorDevice ().nextParameterPage ();
+            displayNotification ("Next Parameter Page");
             break;
 
         // Device up/down
         case 32:
             this.model.getCursorDevice ().selectPrevious ();
+            displayNotification ("Previous Device");
             break;
         case 33:
             this.model.getCursorDevice ().selectNext ();
+            displayNotification ("Next Device");
             break;
             
         // Scale Base note selection
