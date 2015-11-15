@@ -19,15 +19,18 @@ Config.sceneScrollInterval = 100;
 Config.FADER_CTRL_OPTIONS = [ "Volume", "Pan", "Send 1", "Send 2", "Send 3", "Send 4", "Send 5", "Send 6", "Send 7", "Send 8", "Device", "Macros" ];
 Config.SOFT_KEYS_OPTIONS  = [ "Clip Stop", "Solo", "Rec Arm", "Mute", "Select" ];
 
-Config.SCALES_SCALE = 1;
-Config.SCALES_BASE  = 2;
-Config.FADER_CTRL   = 3;
-Config.SOFT_KEYS    = 4;
+Config.SCALES_SCALE  = 1;
+Config.SCALES_BASE   = 2;
+Config.SCALES_IN_KEY = 3;
+Config.SCALES_LAYOUT = 4;
+Config.FADER_CTRL    = 5;
+Config.SOFT_KEYS     = 6;
 
-Config.scale     = 'Major';
-Config.scaleBase = 'C';
-Config.faderCtrl = Config.FADER_CTRL_OPTIONS[0];
-Config.softKeys  = Config.SOFT_KEYS_OPTIONS[0];
+Config.scale      = 'Major';
+Config.scaleBase  = 'C';
+Config.scaleInKey = true;
+Config.faderCtrl  = Config.FADER_CTRL_OPTIONS[0];
+Config.softKeys   = Config.SOFT_KEYS_OPTIONS[0];
 
 Config.init = function ()
 {
@@ -51,6 +54,20 @@ Config.init = function ()
         Config.notifyListeners (Config.SCALES_BASE);
     });
     
+    Config.scaleInScaleSetting = prefs.getEnumSetting ("In Key", "Scales", [ "In Key", "Chromatic" ], "In Key");
+    Config.scaleInScaleSetting.addValueObserver (function (value)
+    {
+        Config.scaleInKey = value == "In Key";
+        Config.notifyListeners (Config.SCALES_IN_KEY);
+    });
+
+    Config.scaleLayoutSetting = prefs.getEnumSetting ("Layout", "Scales", Scales.LAYOUT_NAMES, Scales.LAYOUT_NAMES[0]);
+    Config.scaleLayoutSetting.addValueObserver (function (value)
+    {
+        Config.scaleLayout = value;
+        Config.notifyListeners (Config.SCALES_LAYOUT);
+    });
+
     ///////////////////////////
     // Button Control
 
@@ -77,6 +94,16 @@ Config.setScale = function (scale)
 Config.setScaleBase = function (scaleBase)
 {
     Config.scaleBaseSetting.set (scaleBase);
+};
+
+Config.setScaleInScale = function (inScale)
+{
+    Config.scaleInScaleSetting.set (inScale ? "In Key" : "Chromatic");
+};
+
+Config.setScaleLayout = function (scaleLayout)
+{
+    Config.scaleLayoutSetting.set (scaleLayout);
 };
 
 Config.setFaderCtrl = function (faderCtrl)

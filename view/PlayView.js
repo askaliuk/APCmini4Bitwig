@@ -77,8 +77,70 @@ PlayView.prototype.drawGrid = function ()
 PlayView.prototype.drawSceneButtons = function ()
 {
     for (var i = 0; i < 8; i++)
+    {
         this.surface.setButton (APC_BUTTON_TRACK_BUTTON1 + i, APC_BUTTON_STATE_OFF);
-    this.turnOffSceneButtons ();
+        this.surface.setButton (APC_BUTTON_SCENE_BUTTON1 + i, i == 2 ? APC_BUTTON_STATE_OFF : APC_BUTTON_STATE_ON);
+    }
+};
+
+PlayView.prototype.onScene = function (scene, event)
+{
+    if (this.surface.isShiftPressed ())
+    {
+        this.onShiftScene (scene, event);
+        return;
+    }
+
+    if (!event.isDown ())
+        return;
+    if (!this.canSelectedTrackHoldNotes ())
+        return;
+    switch (scene)
+    {
+        case 0:
+            this.scales.setScaleLayout (this.scales.getScaleLayout () + 1);
+            this.updateNoteMapping ();
+            var name = Scales.LAYOUT_NAMES[this.scales.getScaleLayout ()];
+            Config.setScaleLayout (name);
+            displayNotification (name);
+            break;
+        case 1:
+            this.scales.setScaleLayout (this.scales.getScaleLayout () - 1);
+            this.updateNoteMapping ();
+            var name = Scales.LAYOUT_NAMES[this.scales.getScaleLayout ()];
+            Config.setScaleLayout (name);
+            displayNotification (name);
+            break;
+        case 3:
+            this.scales.prevScale ();
+            Config.setScale (this.scales.getName (this.scales.getSelectedScale ()));
+            displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
+            break;
+        case 4:
+            this.scales.nextScale ();
+            Config.setScale (this.scales.getName (this.scales.getSelectedScale ()));
+            displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
+            break;
+		case 5:
+			this.scales.toggleChromatic ();
+			var isChromatic = this.scales.isChromatic ();
+			Config.setScaleInScale (!isChromatic);
+            displayNotification (isChromatic ? "Chromatic" : "In Key");
+			break;
+		case 6:
+            this.clearPressedKeys ();
+            this.scales.incOctave ();
+            this.updateNoteMapping ();
+            displayNotification (this.scales.getRangeText ());
+            break;
+		case 7:
+            this.clearPressedKeys ();
+            this.scales.decOctave ();
+            this.updateNoteMapping ();
+            displayNotification (this.scales.getRangeText ());
+            break;
+    }
+    this.updateNoteMapping ();
 };
 
 PlayView.prototype.onGridNote = function (note, velocity)
