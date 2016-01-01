@@ -110,9 +110,9 @@ Controller.prototype.flush = function ()
     var mode = this.surface.getCurrentMode ();
     this.updateMode (mode);
 
-    var view = this.surface.getActiveView ();
     if (this.surface.isShiftPressed ())
     {
+        var view = this.surface.getActiveView ();
         this.surface.setButton (APC_BUTTON_TRACK_BUTTON1, view.canScrollUp ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
         this.surface.setButton (APC_BUTTON_TRACK_BUTTON2, view.canScrollDown ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
         this.surface.setButton (APC_BUTTON_TRACK_BUTTON3, view.canScrollLeft ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
