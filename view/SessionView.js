@@ -38,10 +38,10 @@ SessionView.prototype.onScene = function (scene, event)
     if (event.isDown ())
     {
         this.model.getCurrentTrackBank ().launchScene (scene);
-        this.surface.setButton (APC_BUTTON_SCENE_BUTTON1 + scene, APC_BUTTON_STATE_ON);
+        this.surface.updateButton (APC_BUTTON_SCENE_BUTTON1 + scene, APC_BUTTON_STATE_ON);
     }
     else if (event.isUp ())
-        this.surface.setButton (APC_BUTTON_SCENE_BUTTON1 + scene, APC_BUTTON_STATE_OFF);
+        this.surface.updateButton (APC_BUTTON_SCENE_BUTTON1 + scene, APC_BUTTON_STATE_OFF);
 };
 
 SessionView.prototype.onGridNote = function (note, velocity)

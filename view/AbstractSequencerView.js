@@ -66,8 +66,8 @@ AbstractSequencerView.prototype.drawSceneButtons = function ()
     var isKeyboardEnabled = t != null && t.canHoldNotes;
     for (var i = 0; i < 8; i++)
     {
-        this.surface.setButton (APC_BUTTON_SCENE_BUTTON1 + i, isKeyboardEnabled && i == (7 - this.selectedIndex) ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-        this.surface.setButton (APC_BUTTON_TRACK_BUTTON1 + i, APC_BUTTON_STATE_OFF);
+        this.surface.updateButton (APC_BUTTON_SCENE_BUTTON1 + i, isKeyboardEnabled && i == (7 - this.selectedIndex) ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON1 + i, APC_BUTTON_STATE_OFF);
     }
 };
 

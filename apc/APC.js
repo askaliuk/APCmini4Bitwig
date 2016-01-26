@@ -91,7 +91,7 @@ APC.prototype.updateButtons = function ()
 {
     var view = this.getActiveView ();
     for (var i = 0; i < this.buttons.length; i++)
-        this.setButton (this.buttons[i], view.usesButton (this.buttons[i]) ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+        this.updateButton (this.buttons[i], view.usesButton (this.buttons[i]) ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
 };
 
 //--------------------------------------
