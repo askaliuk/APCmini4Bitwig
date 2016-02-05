@@ -41,6 +41,20 @@ function Controller ()
         this.scales.setScaleOffsetByName (Config.scaleBase);
         this.surface.getActiveView ().updateNoteMapping ();
     }));
+    Config.addPropertyListener (Config.SCALES_IN_KEY, doObject (this, function ()
+    {
+        this.scales.setChromatic (!Config.scaleInKey);
+        var view = this.surface.getActiveView ();
+        if (view != null)
+            view.updateNoteMapping ();
+    }));
+    Config.addPropertyListener (Config.SCALES_LAYOUT, doObject (this, function ()
+    {
+        this.scales.setScaleLayoutByName (Config.scaleLayout);
+        var view = this.surface.getActiveView ();
+        if (view != null)
+            view.updateNoteMapping ();
+    }));
     Config.addPropertyListener (Config.FADER_CTRL, doObject (this, function ()
     {
         switch (Config.faderCtrl)
