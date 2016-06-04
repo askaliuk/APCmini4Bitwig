@@ -62,8 +62,7 @@ AbstractSequencerView.prototype.onScene = function (scene, event)
 
 AbstractSequencerView.prototype.drawSceneButtons = function ()
 {
-    var t = this.model.getCurrentTrackBank ().getSelectedTrack ();
-    var isKeyboardEnabled = t != null && t.canHoldNotes;
+    var isKeyboardEnabled = this.canSelectedTrackHoldNotes ();
     for (var i = 0; i < 8; i++)
     {
         this.surface.updateButton (APC_BUTTON_SCENE_BUTTON1 + i, isKeyboardEnabled && i == (7 - this.selectedIndex) ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);

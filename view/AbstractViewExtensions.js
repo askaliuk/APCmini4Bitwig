@@ -330,8 +330,17 @@ AbstractView.prototype.onShiftGridNote = function (note, velocity)
 
         // Last row transport
         case 63:
-            this.model.getTransport ().play ();
-            displayNotification ("Play");
+            if (this.restartFlag)
+            {
+                this.model.getTransport ().stopAndRewind ();
+                this.restartFlag = false;
+            }
+            else
+            {
+                this.model.getTransport ().play ();
+                this.doubleClickTest ();
+            }
+            displayNotification ("Start/Stop");
             break;
         case 55:
             this.model.getTransport ().record ();
@@ -424,10 +433,4 @@ AbstractView.prototype.onNew = function ()
         }
     }
     displayNotification ("In the current selected grid view there is no empty slot. Please scroll down.");
-};
-
-AbstractView.prototype.canSelectedTrackHoldNotes = function ()
-{
-    var t = this.model.getCurrentTrackBank ().getSelectedTrack ();
-    return t != null && t.canHoldNotes;
 };
