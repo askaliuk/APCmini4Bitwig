@@ -330,16 +330,7 @@ AbstractView.prototype.onShiftGridNote = function (note, velocity)
 
         // Last row transport
         case 63:
-            if (this.restartFlag)
-            {
-                this.model.getTransport ().stopAndRewind ();
-                this.restartFlag = false;
-            }
-            else
-            {
-                this.model.getTransport ().play ();
-                this.doubleClickTest ();
-            }
+            this.handlePlayOptions ();
             displayNotification ("Start/Stop");
             break;
         case 55:

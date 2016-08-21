@@ -71,7 +71,14 @@ SessionView.prototype.onGridNote = function (note, velocity)
     }
     else
         slots.launch (scene);
-    slots.select (scene);
+
+    if (this.doSelectClipOnLaunch ())
+        slots.select (scene);
+};
+
+SessionView.prototype.doSelectClipOnLaunch = function ()
+{
+    return Config.selectClipOnLaunch;
 };
 
 SessionView.prototype.drawGrid = function ()
