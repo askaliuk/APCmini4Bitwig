@@ -205,8 +205,17 @@ AbstractView.prototype.onMasterVolume = function (value)
     this.model.getMasterTrack ().setVolume (value);
 };
 
-AbstractView.prototype.drawSceneButtons = function ()
+AbstractView.prototype.updateArrows = function ()
 {
+    this.updateArrowStates ();
+    this.updateSceneButtons ();
+};
+
+AbstractView.prototype.updateSceneButtons = function ()
+{
+    if (this.surface.isShiftPressed ())
+        return;
+    
     var tb = this.model.getCurrentTrackBank ();
     for (var i = 0; i < 8; i++)
     {

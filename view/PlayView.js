@@ -38,7 +38,7 @@ PlayView.prototype.onActivate = function ()
     this.initMaxVelocity ();
 };
 
-PlayView.prototype.updateArrows = function ()
+PlayView.prototype.updateArrowStates = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
     this.canScrollUp = tb.canScrollTracksUp ();
@@ -70,12 +70,13 @@ PlayView.prototype.drawGrid = function ()
             (isRecording ? APC_COLOR_RED : APC_COLOR_GREEN) :
             this.scales.getColor (this.noteMap, i)) : APC_COLOR_BLACK);
     }
-
-    this.drawSceneButtons ();
 };
 
-PlayView.prototype.drawSceneButtons = function ()
+PlayView.prototype.updateSceneButtons = function ()
 {
+    if (this.surface.isShiftPressed ())
+        return;
+    
     for (var i = 0; i < 8; i++)
     {
         this.surface.updateButton (APC_BUTTON_TRACK_BUTTON1 + i, APC_BUTTON_STATE_OFF);

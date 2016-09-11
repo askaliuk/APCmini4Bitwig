@@ -25,7 +25,6 @@ AbstractSequencerView.prototype = new AbstractView ();
 AbstractSequencerView.prototype.onActivate = function ()
 {
     AbstractView.prototype.onActivate.call (this);
-
     this.model.getCurrentTrackBank ().setIndication (true);
 };
 
@@ -60,8 +59,11 @@ AbstractSequencerView.prototype.onScene = function (scene, event)
     displayNotification (this.resolutionsStr[this.selectedIndex]);
 };
 
-AbstractSequencerView.prototype.drawSceneButtons = function ()
+AbstractSequencerView.prototype.updateSceneButtons = function ()
 {
+    if (this.surface.isShiftPressed ())
+        return;
+    
     var isKeyboardEnabled = this.model.canSelectedTrackHoldNotes ();
     for (var i = 0; i < 8; i++)
     {

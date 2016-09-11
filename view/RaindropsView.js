@@ -23,15 +23,13 @@ RaindropsView.prototype.onActivate = function ()
     AbstractSequencerView.prototype.onActivate.call (this);
 };
 
-RaindropsView.prototype.updateArrows = function ()
+RaindropsView.prototype.updateArrowStates = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
     this.canScrollUp = tb.canScrollTracksUp ();
     this.canScrollDown = tb.canScrollTracksDown ();
     this.canScrollLeft = this.offsetY - RaindropsView.NUM_OCTAVE >= 0;
     this.canScrollRight = this.offsetY + RaindropsView.NUM_OCTAVE <= this.clip.getRowSize () - RaindropsView.NUM_OCTAVE;
-
-    this.drawSceneButtons ();
 };
 
 RaindropsView.prototype.updateNoteMapping = function ()
@@ -135,8 +133,6 @@ RaindropsView.prototype.drawGrid = function ()
             this.surface.pads.lightEx (x, y, color, null, false);
         }
     }
-    
-    this.drawSceneButtons ();
 };
 
 RaindropsView.prototype.getNoteDistance = function (row, length)

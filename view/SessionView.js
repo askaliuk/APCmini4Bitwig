@@ -14,11 +14,10 @@ SessionView.prototype = new AbstractView ();
 SessionView.prototype.onActivate = function ()
 {
     AbstractView.prototype.onActivate.call (this);
-
     this.model.getCurrentTrackBank ().setIndication (true);
 };
 
-SessionView.prototype.updateArrows = function ()
+SessionView.prototype.updateArrowStates = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
     this.canScrollUp = tb.canScrollTracksUp ();
@@ -96,8 +95,6 @@ SessionView.prototype.drawGrid = function ()
         for (var y = 0; y < 8; y++)
             this.drawPad (t.slots[y], x, y, t.recarm);
     }
-
-    this.drawSceneButtons ();
 };
 
 SessionView.prototype.drawPad = function (slot, x, y, isArmed)

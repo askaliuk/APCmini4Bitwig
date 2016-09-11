@@ -24,7 +24,7 @@ SequencerView.prototype.onActivate = function ()
     AbstractSequencerView.prototype.onActivate.call (this);
 };
 
-SequencerView.prototype.updateArrows = function ()
+SequencerView.prototype.updateArrowStates = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
     this.canScrollUp = tb.canScrollTracksUp ();
@@ -163,6 +163,4 @@ SequencerView.prototype.drawGrid = function ()
     var loopEndPad   = Math.ceil (Math.min (maxQuarters, start + this.clip.getLoopLength ()) / quartersPerPad);
     for (var pad = 0; pad < 8; pad++)
         this.surface.pads.lightEx (pad, 7, pad >= loopStartPad && pad < loopEndPad ? (pad == currentMeasure ? APC_COLOR_GREEN : APC_COLOR_YELLOW) : APC_COLOR_BLACK, null, false);
-
-    this.drawSceneButtons ();
 };

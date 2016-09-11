@@ -28,7 +28,7 @@ function DrumView (model)
 }
 DrumView.prototype = new AbstractSequencerView ();
 
-DrumView.prototype.updateArrows = function ()
+DrumView.prototype.updateArrowStates = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
     this.canScrollUp = tb.canScrollTracksUp ();
@@ -220,8 +220,6 @@ DrumView.prototype.drawGrid = function ()
         var y = 7 - Math.floor (col / 8);
         this.surface.pads.lightEx (x, y, hilite ? APC_COLOR_GREEN : (isSet ?  APC_COLOR_RED : APC_COLOR_BLACK));
     }
-    
-    this.drawSceneButtons ();
 };
 
 DrumView.prototype.getPadColor = function (index, primary, hasDrumPads, isSoloed, isRecording)
