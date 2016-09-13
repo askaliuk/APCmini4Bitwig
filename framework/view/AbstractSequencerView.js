@@ -9,9 +9,9 @@ function AbstractSequencerView (model, rows, cols)
 
     AbstractView.call (this, model);
 
-    this.resolutions = [ 1, 2/3, 1/2, 1/3, 1/4, 1/6, 1/8, 1/12 ];
+    this.resolutions    = [ 1, 2/3, 1/2, 1/3, 1/4, 1/6, 1/8, 1/12 ];
     this.resolutionsStr = [ "1/4", "1/4t", "1/8", "1/8t", "1/16", "1/16t", "1/32", "1/32t" ];
-    this.selectedIndex = 4;
+    this.selectedIndex  = 4;
     this.scales = this.model.getScales ();
 
     this.offsetX = 0;
@@ -21,12 +21,6 @@ function AbstractSequencerView (model, rows, cols)
     this.clip.setStepLength (this.resolutions[this.selectedIndex]);
 }
 AbstractSequencerView.prototype = new AbstractView ();
-
-AbstractSequencerView.prototype.onActivate = function ()
-{
-    AbstractView.prototype.onActivate.call (this);
-    this.model.getCurrentTrackBank ().setIndication (true);
-};
 
 AbstractSequencerView.prototype.scrollLeft = function (event)
 {
@@ -46,30 +40,12 @@ AbstractSequencerView.prototype.scrollRight = function (event)
     this.clip.scrollStepsPageForward ();
 };
 
-AbstractSequencerView.prototype.onScene = function (scene, event)
+AbstractSequencerView.prototype.onScene = function (index, event)
 {
-    if (this.surface.isShiftPressed ())
-    {
-        this.onShiftScene (scene, event);
+    if (!event.isDown () || !this.model.canSelectedTrackHoldNotes ())
         return;
-    }
-
-    this.selectedIndex = 7 - scene;
+    this.selectedIndex = 7 - index;
     this.clip.setStepLength (this.resolutions[this.selectedIndex]);
-    displayNotification (this.resolutionsStr[this.selectedIndex]);
-};
-
-AbstractSequencerView.prototype.updateSceneButtons = function ()
-{
-    if (this.surface.isShiftPressed ())
-        return;
-    
-    var isKeyboardEnabled = this.model.canSelectedTrackHoldNotes ();
-    for (var i = 0; i < 8; i++)
-    {
-        this.surface.updateButton (APC_BUTTON_SCENE_BUTTON1 + i, isKeyboardEnabled && i == (7 - this.selectedIndex) ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON1 + i, APC_BUTTON_STATE_OFF);
-    }
 };
 
 AbstractSequencerView.prototype.isInXRange = function (x)

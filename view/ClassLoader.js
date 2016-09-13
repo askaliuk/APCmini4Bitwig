@@ -12,7 +12,7 @@ var VIEW_RAINDROPS = 4;
 load ("AbstractViewExtensions.js");
 load ("PlayView.js");
 load ("SessionView.js");
-load ("AbstractSequencerView.js");
+load ("BaseSequencerView.js");
 load ("SequencerView.js");
 load ("DrumView.js");
 load ("RaindropsView.js");
