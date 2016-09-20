@@ -1,5 +1,5 @@
 // Written by Jürgen Moßgraber - mossgrabers.de
-// (c) 2014-2015
+// (c) 2014-2016
 // Licensed under LGPLv3 - http://www.gnu.org/licenses/lgpl-3.0.txt
 
 RaindropsView.NUM_DISPLAY_ROWS = 8;
@@ -45,12 +45,6 @@ RaindropsView.prototype.updateScale = function ()
 
 RaindropsView.prototype.onGridNote = function (note, velocity)
 {
-    if (this.surface.isShiftPressed ())
-    {
-        this.onShiftGridNote (note, velocity);
-        return;
-    }
-
     if (!this.model.canSelectedTrackHoldNotes ())
         return;
     if (velocity == 0)
@@ -94,12 +88,6 @@ RaindropsView.prototype.scrollLeft = function (event)
 
 RaindropsView.prototype.drawGrid = function ()
 {
-    if (this.surface.isShiftPressed ())
-    {
-        this.drawShiftGrid ();
-        return;
-    }
-    
     if (!this.model.canSelectedTrackHoldNotes ())
     {
         this.surface.pads.turnOff ();
@@ -130,7 +118,7 @@ RaindropsView.prototype.drawGrid = function ()
                 if ((left <= distance && y == left) || (left > distance && y == sum - left))
                     color = APC_COLOR_GREEN;
             }
-            this.surface.pads.lightEx (x, y, color, null, false);
+            this.surface.pads.lightEx (x, 7 - y, color, null, false);
         }
     }
 };
@@ -192,12 +180,6 @@ RaindropsView.prototype.getNoteDistanceToTheLeft = function (row, start, length)
 
 RaindropsView.prototype.onSelectTrack = function (index, event)
 {
-    if (this.surface.isShiftPressed ())
-    {
-        AbstractView.prototype.onSelectTrack.call (this, index, event);
-        return;
-    }
-    
     if (!event.isDown ())
         return;
         
@@ -222,4 +204,3 @@ RaindropsView.prototype.onSelectTrack = function (index, event)
     }
     this.updateScale ();
 };
-

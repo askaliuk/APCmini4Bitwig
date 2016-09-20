@@ -1,5 +1,5 @@
 // Written by Jürgen Moßgraber - mossgrabers.de
-// (c) 2014-2015
+// (c) 2014-2016
 // Licensed under LGPLv3 - http://www.gnu.org/licenses/lgpl-3.0.txt
 
 function PlayView (model)
@@ -56,12 +56,6 @@ PlayView.prototype.updateNoteMapping = function ()
 
 PlayView.prototype.drawGrid = function ()
 {
-    if (this.surface.isShiftPressed ())
-    {
-        this.drawShiftGrid ();
-        return;
-    }
-
     var isKeyboardEnabled = this.model.canSelectedTrackHoldNotes ();
     var isRecording = this.model.hasRecordingState ();
     for (var i = 36; i < 100; i++)
@@ -74,9 +68,6 @@ PlayView.prototype.drawGrid = function ()
 
 PlayView.prototype.updateSceneButtons = function ()
 {
-    if (this.surface.isShiftPressed ())
-        return;
-    
     for (var i = 0; i < 8; i++)
     {
         this.surface.updateButton (APC_BUTTON_TRACK_BUTTON1 + i, APC_BUTTON_STATE_OFF);
@@ -86,12 +77,6 @@ PlayView.prototype.updateSceneButtons = function ()
 
 PlayView.prototype.onScene = function (scene, event)
 {
-    if (this.surface.isShiftPressed ())
-    {
-        this.onShiftScene (scene, event);
-        return;
-    }
-
     if (!event.isDown ())
         return;
     if (!this.model.canSelectedTrackHoldNotes ())
@@ -146,12 +131,6 @@ PlayView.prototype.onScene = function (scene, event)
 
 PlayView.prototype.onGridNote = function (note, velocity)
 {
-    if (this.surface.isShiftPressed ())
-    {
-        this.onShiftGridNote (note, velocity);
-        return;
-    }
-
     if (!this.model.canSelectedTrackHoldNotes ())
         return;
         
@@ -167,12 +146,6 @@ PlayView.prototype.onGridNote = function (note, velocity)
 
 PlayView.prototype.onSelectTrack = function (index, event)
 {
-    if (this.surface.isShiftPressed ())
-    {
-        AbstractView.prototype.onSelectTrack.call (this, index, event);
-        return;
-    }
-    
     if (!event.isDown ())
         return;
         

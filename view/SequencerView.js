@@ -1,5 +1,5 @@
 // Written by Jürgen Moßgraber - mossgrabers.de
-// (c) 2014-2015
+// (c) 2014-2016
 // Licensed under LGPLv3 - http://www.gnu.org/licenses/lgpl-3.0.txt
 
 SequencerView.NUM_DISPLAY_ROWS = 7;
@@ -46,12 +46,6 @@ SequencerView.prototype.updateScale = function ()
 
 SequencerView.prototype.onGridNote = function (note, velocity)
 {
-    if (this.surface.isShiftPressed ())
-    {
-        this.onShiftGridNote (note, velocity);
-        return;
-    }
-
     if (!this.model.canSelectedTrackHoldNotes ())
         return;
     var index = note - 36;
@@ -90,12 +84,6 @@ SequencerView.prototype.onGridNote = function (note, velocity)
 
 SequencerView.prototype.onSelectTrack = function (index, event)
 {
-    if (this.surface.isShiftPressed ())
-    {
-        AbstractView.prototype.onSelectTrack.call (this, index, event);
-        return;
-    }
-    
     if (!event.isDown ())
         return;
         
@@ -130,12 +118,6 @@ SequencerView.prototype.updateOctave = function (value)
 
 SequencerView.prototype.drawGrid = function ()
 {
-    if (this.surface.isShiftPressed ())
-    {
-        this.drawShiftGrid ();
-        return;
-    }
-    
     var isKeyboardEnabled = this.model.canSelectedTrackHoldNotes ();
     var step = this.clip.getCurrentStep ();
     var hiStep = this.isInXRange (step) ? step % SequencerView.NUM_DISPLAY_COLS : -1;
@@ -147,9 +129,9 @@ SequencerView.prototype.drawGrid = function ()
             var isSet = this.clip.getStep (x, row);
             var hilite = x == hiStep;
             if (isKeyboardEnabled)
-                this.surface.pads.lightEx (x, y, isSet ? (hilite ? APC_COLOR_GREEN : APC_COLOR_RED) : hilite ? APC_COLOR_GREEN : this.scales.getColor (this.noteMap, y));
+                this.surface.pads.lightEx (x, 7 - y, isSet ? (hilite ? APC_COLOR_GREEN : APC_COLOR_RED) : hilite ? APC_COLOR_GREEN : this.scales.getColor (this.noteMap, y));
             else
-                this.surface.pads.lightEx (x, y, APC_COLOR_BLACK);
+                this.surface.pads.lightEx (x, 7 - y, APC_COLOR_BLACK);
         }
     }
     
@@ -162,5 +144,5 @@ SequencerView.prototype.drawGrid = function ()
     var loopStartPad = Math.floor (Math.max (0, start) / quartersPerPad);
     var loopEndPad   = Math.ceil (Math.min (maxQuarters, start + this.clip.getLoopLength ()) / quartersPerPad);
     for (var pad = 0; pad < 8; pad++)
-        this.surface.pads.lightEx (pad, 7, pad >= loopStartPad && pad < loopEndPad ? (pad == currentMeasure ? APC_COLOR_GREEN : APC_COLOR_YELLOW) : APC_COLOR_BLACK, null, false);
+        this.surface.pads.lightEx (pad, 0, pad >= loopStartPad && pad < loopEndPad ? (pad == currentMeasure ? APC_COLOR_GREEN : APC_COLOR_YELLOW) : APC_COLOR_BLACK, null, false);
 };

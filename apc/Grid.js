@@ -18,7 +18,7 @@ Grid.prototype.light = function (index, color)
 
 Grid.prototype.lightEx = function (x, y, color)
 {
-    this.buttonColors[x + 8 * y] = color;
+    this.buttonColors[x + 8 * (7 - y)] = color;
 };
 
 Grid.prototype.flush = function ()

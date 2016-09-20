@@ -111,6 +111,7 @@ function Controller ()
     this.surface.addView (VIEW_SEQUENCER, new SequencerView (this.model));
     this.surface.addView (VIEW_DRUM, new DrumView (this.model));
     this.surface.addView (VIEW_RAINDROPS, new RaindropsView (this.model));
+    this.surface.addView (VIEW_SHIFT, new ShiftView (this.model));
     
     this.surface.setActiveView (VIEW_SESSION);
     this.surface.setPendingMode (MODE_VOLUME);
@@ -120,23 +121,7 @@ Controller.prototype = new AbstractController ();
 Controller.prototype.flush = function ()
 {
     AbstractController.prototype.flush.call (this);
-    
-    var mode = this.surface.getCurrentMode ();
-    this.updateMode (mode);
-
-    if (this.surface.isShiftPressed ())
-    {
-        var view = this.surface.getActiveView ();
-        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON1, view.canScrollUp ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON2, view.canScrollDown ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON3, view.canScrollLeft ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON4, view.canScrollRight ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-        
-        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON5, mode == MODE_VOLUME ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON6, mode == MODE_PAN ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON7, mode >= MODE_SEND1 && mode <= MODE_SEND8 ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON8, mode == MODE_DEVICE || mode == MODE_MACRO ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    }
+    this.updateMode (this.surface.getCurrentMode ());
 };
 
 Controller.prototype.updateMode = function (mode)
