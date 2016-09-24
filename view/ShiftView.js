@@ -47,6 +47,7 @@ ShiftView.prototype.drawGrid = function ()
     this.surface.pads.light (36 + 58, this.surface.previousViewId == VIEW_DRUM      ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
     this.surface.pads.light (36 + 59, this.surface.previousViewId == VIEW_SEQUENCER ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
     this.surface.pads.light (36 + 60, this.surface.previousViewId == VIEW_RAINDROPS ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 48, this.surface.previousViewId == VIEW_SENDS ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
     
     // Draw transport
     var transport = this.model.getTransport ();
@@ -89,6 +90,10 @@ ShiftView.prototype.onGridNote = function (note, velocity)
         case 60:
             this.surface.previousViewId = VIEW_RAINDROPS;
             displayNotification ("Raindrops");
+            break;
+        case 48:
+            this.surface.previousViewId = VIEW_SENDS;
+            displayNotification ("Sends");
             break;
 
         // Last row transport

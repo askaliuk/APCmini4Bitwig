@@ -9,6 +9,7 @@ var VIEW_SEQUENCER = 2;
 var VIEW_DRUM      = 3;
 var VIEW_RAINDROPS = 4;
 var VIEW_SHIFT     = 5;
+var VIEW_SENDS = 6;
 
 load ("AbstractViewExtensions.js");
 load ("PlayView.js");
@@ -18,3 +19,4 @@ load ("SequencerView.js");
 load ("DrumView.js");
 load ("RaindropsView.js");
 load ("ShiftView.js");
+load ("SendsView.js");
