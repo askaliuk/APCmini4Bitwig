@@ -77,9 +77,7 @@ PlayView.prototype.updateSceneButtons = function ()
 
 PlayView.prototype.onScene = function (scene, event)
 {
-    if (!event.isDown ())
-        return;
-    if (!this.model.canSelectedTrackHoldNotes ())
+    if (!event.isDown () || !this.model.canSelectedTrackHoldNotes ())
         return;
     switch (scene)
     {
