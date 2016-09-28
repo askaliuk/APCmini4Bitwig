@@ -23,6 +23,10 @@ AbstractSequencerView.COLOR_CONTENT                = APC_COLOR_RED;
 AbstractSequencerView.COLOR_MEASURE                = APC_COLOR_YELLOW;
 AbstractSequencerView.COLOR_ACTIVE_MEASURE         = APC_COLOR_GREEN;
 
+AbstractPlayView.COLOR_PLAY   = APC_COLOR_GREEN;
+AbstractPlayView.COLOR_RECORD = APC_COLOR_RED;
+AbstractPlayView.COLOR_OFF    = APC_COLOR_BLACK;
+
 AbstractDrumView.COLOR_RECORD      = APC_COLOR_RED;
 AbstractDrumView.COLOR_PLAY        = APC_COLOR_GREEN;
 AbstractDrumView.COLOR_SELECTED    = APC_COLOR_YELLOW_BLINK;

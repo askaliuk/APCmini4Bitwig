@@ -4,66 +4,26 @@
 
 function PlayView (model)
 {
-    AbstractView.call (this, model);
-    this.scales = model.getScales ();
-    this.noteMap = this.scales.getEmptyMatrix ();
-    this.pressedKeys = initArray (0, 128);
-    this.defaultVelocity = [];
-    for (var i = 0; i < 128; i++)
-        this.defaultVelocity.push (i);
-    var tb = model.getTrackBank ();
-    tb.addNoteListener (doObject (this, function (pressed, note, velocity)
-    {
-        // Light notes send from the sequencer
-        for (var i = 0; i < 128; i++)
-        {
-            if (this.noteMap[i] == note)
-                this.pressedKeys[i] = pressed ? velocity : 0;
-        }
-    }));
-    tb.addTrackSelectionListener (doObject (this, function (index, isSelected)
-    {
-        this.clearPressedKeys ();
-    }));
-
-    this.scrollerInterval = Config.trackScrollInterval;
+    if (model == null)
+        return;
+    
+    AbstractPlayView.call (this, model);
 }
-PlayView.prototype = new AbstractView ();
+PlayView.prototype = new AbstractPlayView ();
 
 PlayView.prototype.onActivate = function ()
 {
-    AbstractView.prototype.onActivate.call (this);
-
-    this.model.getCurrentTrackBank ().setIndication (true);
+    AbstractPlayView.prototype.onActivate.call (this);
     this.initMaxVelocity ();
 };
 
-PlayView.prototype.updateArrowStates = function ()
+PlayView.prototype.onGridNote = function (note, velocity)
 {
-    var tb = this.model.getCurrentTrackBank ();
-    this.canScrollUp = tb.canScrollTracksUp ();
-    this.canScrollDown = tb.canScrollTracksDown ();
-    this.canScrollLeft = tb.canScrollScenesUp ();
-    this.canScrollRight = tb.canScrollScenesDown ();
-};
-
-PlayView.prototype.updateNoteMapping = function ()
-{
-    this.noteMap = this.model.canSelectedTrackHoldNotes () ? this.scales.getNoteMatrix () : this.scales.getEmptyMatrix ();
-    // Workaround: https://github.com/git-moss/Push4Bitwig/issues/7
-    scheduleTask (doObject (this, function () { this.surface.setKeyTranslationTable (this.noteMap); }), null, 100);
-};
-
-PlayView.prototype.drawGrid = function ()
-{
-    var isKeyboardEnabled = this.model.canSelectedTrackHoldNotes ();
-    var isRecording = this.model.hasRecordingState ();
-    for (var i = 36; i < 100; i++)
-    {
-        this.surface.pads.light (i - 36, isKeyboardEnabled ? (this.pressedKeys[i] > 0 ?
-            (isRecording ? APC_COLOR_RED : APC_COLOR_GREEN) :
-            this.scales.getColor (this.noteMap, i)) : APC_COLOR_BLACK);
-    }
+    if (!this.model.canSelectedTrackHoldNotes () || this.noteMap[note] == -1)
+        return;
+    // Mark selected notes
+    this.setPressedKeys (this.noteMap[note], true, velocity);
+    this.surface.sendMidiEvent (0x90, this.noteMap[note], velocity);
 };
 
 PlayView.prototype.updateSceneButtons = function ()
@@ -77,7 +37,9 @@ PlayView.prototype.updateSceneButtons = function ()
 
 PlayView.prototype.onScene = function (scene, event)
 {
-    if (!event.isDown () || !this.model.canSelectedTrackHoldNotes ())
+    if (!event.isDown ())
+        return;
+    if (!this.model.canSelectedTrackHoldNotes ())
         return;
     switch (scene)
     {
@@ -127,21 +89,6 @@ PlayView.prototype.onScene = function (scene, event)
     this.updateNoteMapping ();
 };
 
-PlayView.prototype.onGridNote = function (note, velocity)
-{
-    if (!this.model.canSelectedTrackHoldNotes ())
-        return;
-        
-    this.surface.sendMidiEvent (0x90, this.noteMap[note], velocity);
-        
-    // Mark selected notes
-    for (var i = 0; i < 128; i++)
-    {
-        if (this.noteMap[note] == this.noteMap[i])
-            this.pressedKeys[i] = velocity;
-    }
-};
-
 PlayView.prototype.onSelectTrack = function (index, event)
 {
     if (!event.isDown ())
@@ -169,22 +116,13 @@ PlayView.prototype.onSelectTrack = function (index, event)
     this.updateNoteMapping ();
 };
 
-PlayView.prototype.onOctaveDown = function (event)
+PlayView.prototype.updateArrowStates = function ()
 {
-    if (!event.isDown ())
-        return;
-    this.clearPressedKeys ();
-    this.scales.decOctave ();
-    displayNotification (this.scales.getRangeText ());
-};
-
-PlayView.prototype.onOctaveUp = function (event)
-{
-    if (!event.isDown ())
-        return;
-    this.clearPressedKeys ();
-    this.scales.incOctave ();
-    displayNotification (this.scales.getRangeText ());
+    var tb = this.model.getCurrentTrackBank ();
+    this.canScrollUp = tb.canScrollTracksUp ();
+    this.canScrollDown = tb.canScrollTracksDown ();
+    this.canScrollLeft = tb.canScrollScenesUp ();
+    this.canScrollRight = tb.canScrollScenesDown ();
 };
 
 PlayView.prototype.onAccent = function (event)
@@ -201,8 +139,7 @@ PlayView.prototype.initMaxVelocity = function ()
     this.surface.setVelocityTranslationTable (Config.accentActive ? this.maxVelocity : this.defaultVelocity);
 };
 
-PlayView.prototype.clearPressedKeys = function ()
+PlayView.prototype.getColor = function (pad, selectedTrack)
 {
-    for (var i = 0; i < 128; i++)
-        this.pressedKeys[i] = 0;
+    return this.scales.getColor (this.noteMap, pad);
 };

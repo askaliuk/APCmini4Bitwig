@@ -28,45 +28,45 @@ ShiftView.prototype.drawGrid = function ()
     var scaleOffset = this.model.getScales ().getScaleOffset ();
     // 0'C', 1'G', 2'D', 3'A', 4'E', 5'B', 6'F', 7'Bb', 8'Eb', 9'Ab', 10'Db', 11'Gb'
     for (var i = 7; i < 64; i++)
-        this.surface.pads.light (i, APC_COLOR_BLACK);
-    this.surface.pads.light (0, scaleOffset == 0 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (1, scaleOffset == 2 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (2, scaleOffset == 4 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (3, scaleOffset == 6 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (4, scaleOffset == 1 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (5, scaleOffset == 3 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (6, scaleOffset == 5 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (9, scaleOffset == 10 ? APC_COLOR_GREEN : APC_COLOR_RED);
-    this.surface.pads.light (10, scaleOffset == 8 ? APC_COLOR_GREEN : APC_COLOR_RED);
-    this.surface.pads.light (12, scaleOffset == 11 ? APC_COLOR_GREEN : APC_COLOR_RED);
-    this.surface.pads.light (13, scaleOffset == 9 ? APC_COLOR_GREEN : APC_COLOR_RED);
-    this.surface.pads.light (14, scaleOffset == 7 ? APC_COLOR_GREEN : APC_COLOR_RED);
+        this.surface.pads.light (36 + i, APC_COLOR_BLACK);
+    this.surface.pads.light (36 + 0, scaleOffset == 0 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 1, scaleOffset == 2 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 2, scaleOffset == 4 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 3, scaleOffset == 6 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 4, scaleOffset == 1 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 5, scaleOffset == 3 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 6, scaleOffset == 5 ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 9, scaleOffset == 10 ? APC_COLOR_GREEN : APC_COLOR_RED);
+    this.surface.pads.light (36 + 10, scaleOffset == 8 ? APC_COLOR_GREEN : APC_COLOR_RED);
+    this.surface.pads.light (36 + 12, scaleOffset == 11 ? APC_COLOR_GREEN : APC_COLOR_RED);
+    this.surface.pads.light (36 + 13, scaleOffset == 9 ? APC_COLOR_GREEN : APC_COLOR_RED);
+    this.surface.pads.light (36 + 14, scaleOffset == 7 ? APC_COLOR_GREEN : APC_COLOR_RED);
 
     // Device Parameters up/down
-    this.surface.pads.light (24, APC_COLOR_YELLOW);
-    this.surface.pads.light (25, APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 24, APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 25, APC_COLOR_YELLOW);
     // Device up/down
-    this.surface.pads.light (32, APC_COLOR_GREEN);
-    this.surface.pads.light (33, APC_COLOR_GREEN);
+    this.surface.pads.light (36 + 32, APC_COLOR_GREEN);
+    this.surface.pads.light (36 + 33, APC_COLOR_GREEN);
     
     // Draw the view selection: Session, Note, Drum, Sequencer
-    this.surface.pads.light (56, this.surface.previousViewId == VIEW_SESSION   ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (57, this.surface.previousViewId == VIEW_PLAY      ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (58, this.surface.previousViewId == VIEW_DRUM      ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (59, this.surface.previousViewId == VIEW_SEQUENCER ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
-    this.surface.pads.light (60, this.surface.previousViewId == VIEW_RAINDROPS ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 56, this.surface.previousViewId == VIEW_SESSION   ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 57, this.surface.previousViewId == VIEW_PLAY      ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 58, this.surface.previousViewId == VIEW_DRUM      ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 59, this.surface.previousViewId == VIEW_SEQUENCER ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 60, this.surface.previousViewId == VIEW_RAINDROPS ? APC_COLOR_GREEN : APC_COLOR_YELLOW);
     
     // Draw transport
     var transport = this.model.getTransport ();
-    this.surface.pads.light (63, transport.isPlaying ? APC_COLOR_GREEN_BLINK : APC_COLOR_GREEN);
-    this.surface.pads.light (55, transport.isRecording ? APC_COLOR_RED_BLINK : APC_COLOR_RED);
-    this.surface.pads.light (47, APC_COLOR_YELLOW);
-    this.surface.pads.light (39, APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 63, transport.isPlaying ? APC_COLOR_GREEN_BLINK : APC_COLOR_GREEN);
+    this.surface.pads.light (36 + 55, transport.isRecording ? APC_COLOR_RED_BLINK : APC_COLOR_RED);
+    this.surface.pads.light (36 + 47, APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 39, APC_COLOR_YELLOW);
     
-    this.surface.pads.light (62, APC_COLOR_YELLOW);
-    this.surface.pads.light (54, transport.isLauncherOverdub ? APC_COLOR_RED_BLINK : APC_COLOR_RED);
-    this.surface.pads.light (46, APC_COLOR_YELLOW);
-    this.surface.pads.light (38, APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 62, APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 54, transport.isLauncherOverdub ? APC_COLOR_RED_BLINK : APC_COLOR_RED);
+    this.surface.pads.light (36 + 46, APC_COLOR_YELLOW);
+    this.surface.pads.light (36 + 38, APC_COLOR_YELLOW);
 
     // Draw the track states on the scene buttons
     this.surface.updateButton (APC_BUTTON_SCENE_BUTTON1, AbstractView.trackState == TRACK_STATE_CLIP_STOP ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);

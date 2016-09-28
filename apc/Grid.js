@@ -13,7 +13,7 @@ function Grid (output)
 
 Grid.prototype.light = function (index, color)
 {
-    this.buttonColors[index] = color;
+    this.buttonColors[index - 36] = color;
 };
 
 Grid.prototype.lightEx = function (x, y, color)

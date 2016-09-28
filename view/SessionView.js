@@ -110,5 +110,5 @@ SessionView.prototype.drawPad = function (slot, x, y, isArmed)
     else if (slot.hasContent)
         color = APC_COLOR_YELLOW;
 
-    this.surface.pads.light ((7 - y) * 8 + x, color);
+    this.surface.pads.light (36 + (7 - y) * 8 + x, color);
 };
