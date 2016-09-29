@@ -29,10 +29,7 @@ PlayView.prototype.onGridNote = function (note, velocity)
 PlayView.prototype.updateSceneButtons = function ()
 {
     for (var i = 0; i < 8; i++)
-    {
-        this.surface.updateButton (APC_BUTTON_TRACK_BUTTON1 + i, APC_BUTTON_STATE_OFF);
         this.surface.updateButton (APC_BUTTON_SCENE_BUTTON1 + i, i == 2 ? APC_BUTTON_STATE_OFF : APC_BUTTON_STATE_ON);
-    }
 };
 
 PlayView.prototype.onScene = function (scene, event)
@@ -87,42 +84,6 @@ PlayView.prototype.onScene = function (scene, event)
             break;
     }
     this.updateNoteMapping ();
-};
-
-PlayView.prototype.onSelectTrack = function (index, event)
-{
-    if (!event.isDown ())
-        return;
-        
-    switch (index)
-    {
-        case 0:
-            this.scales.prevScale ();
-            Config.setScale (this.scales.getName (this.scales.getSelectedScale ()));
-            displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
-            break;
-        case 1:
-            this.scales.nextScale ();
-            Config.setScale (this.scales.getName (this.scales.getSelectedScale ()));
-            displayNotification (this.scales.getName (this.scales.getSelectedScale ()));
-            break;
-        case 2:
-            this.onOctaveDown (event);
-            break;
-        case 3:
-            this.onOctaveUp (event);
-            break;
-    }
-    this.updateNoteMapping ();
-};
-
-PlayView.prototype.updateArrowStates = function ()
-{
-    var tb = this.model.getCurrentTrackBank ();
-    this.canScrollUp = tb.canScrollTracksUp ();
-    this.canScrollDown = tb.canScrollTracksDown ();
-    this.canScrollLeft = tb.canScrollScenesUp ();
-    this.canScrollRight = tb.canScrollScenesDown ();
 };
 
 PlayView.prototype.onAccent = function (event)

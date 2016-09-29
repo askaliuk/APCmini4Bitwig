@@ -14,14 +14,6 @@ function ShiftView (model)
 }
 ShiftView.prototype = new AbstractView ();
 
-ShiftView.prototype.onActivate = function ()
-{
-    AbstractView.prototype.onActivate.call (this);
-
-//    this.model.getCurrentTrackBank ().setIndication (false);
-//    this.updateIndication ();
-};
-
 ShiftView.prototype.drawGrid = function ()
 {
     // Draw the keyboard
@@ -67,16 +59,6 @@ ShiftView.prototype.drawGrid = function ()
     this.surface.pads.light (36 + 54, transport.isLauncherOverdub ? APC_COLOR_RED_BLINK : APC_COLOR_RED);
     this.surface.pads.light (36 + 46, APC_COLOR_YELLOW);
     this.surface.pads.light (36 + 38, APC_COLOR_YELLOW);
-
-    // Draw the track states on the scene buttons
-    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON1, AbstractView.trackState == TRACK_STATE_CLIP_STOP ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON2, AbstractView.trackState == TRACK_STATE_SOLO ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON3, AbstractView.trackState == TRACK_STATE_REC_ARM ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON4, AbstractView.trackState == TRACK_STATE_MUTE ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON5, AbstractView.trackState == TRACK_STATE_SELECT ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON6, this.model.isEffectTrackBankActive () ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON7, APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON8, APC_BUTTON_STATE_OFF);
 };
 
 ShiftView.prototype.onGridNote = function (note, velocity)
@@ -212,28 +194,6 @@ ShiftView.prototype.onScene = function (index, event)
     }
 };
 
-ShiftView.prototype.updateSceneButtons = function ()
-{
-    var view = this.surface.getActiveView ();
-    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON1, view.canScrollUp ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON2, view.canScrollDown ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON3, view.canScrollLeft ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON4, view.canScrollRight ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    
-    var mode = this.surface.getCurrentMode ();
-    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON5, mode == MODE_VOLUME ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON6, mode == MODE_PAN ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON7, mode >= MODE_SEND1 && mode <= MODE_SEND8 ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON8, mode == MODE_DEVICE || mode == MODE_MACRO ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
-};
-
-ShiftView.prototype.updateArrowStates = function ()
-{
-//    this.canScrollUp = false;
-//    this.canScrollDown = false;
-//    this.canScrollLeft = false;
-//    this.canScrollRight = false;
-};
 
 ShiftView.prototype.onSelectTrack = function (index, event)
 {
@@ -243,16 +203,16 @@ ShiftView.prototype.onSelectTrack = function (index, event)
     switch (index)
     {
         case 0:
-            this.onUp (event);
-            break;
-        case 1:
-            this.onDown (event);
-            break;
-        case 2:
             this.onLeft (event);
             break;
-        case 3:
+        case 1:
             this.onRight (event);
+            break;
+        case 2:
+            this.onUp (event);
+            break;
+        case 3:
+            this.onDown (event);
             break;
     
     
@@ -301,3 +261,38 @@ ShiftView.prototype.onSelectTrack = function (index, event)
             break;
     }
 }
+
+ShiftView.prototype.updateArrowStates = function ()
+{
+    var tb = this.model.getCurrentTrackBank ();
+    this.canScrollUp    = tb.canScrollScenesUp ();
+    this.canScrollDown  = tb.canScrollScenesDown ();
+    this.canScrollLeft  = tb.canScrollTracksUp ();
+    this.canScrollRight = tb.canScrollTracksDown ();
+};
+
+ShiftView.prototype.updateSceneButtons = function ()
+{
+    var view = this.surface.getActiveView ();
+    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON1, view.canScrollUp ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON2, view.canScrollDown ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON3, view.canScrollLeft ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON4, view.canScrollRight ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    
+    var mode = this.surface.getCurrentMode ();
+    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON5, mode == MODE_VOLUME ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON6, mode == MODE_PAN ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON7, mode >= MODE_SEND1 && mode <= MODE_SEND8 ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_TRACK_BUTTON8, mode == MODE_DEVICE || mode == MODE_MACRO ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+
+
+    // Draw the track states on the scene buttons
+    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON1, AbstractView.trackState == TRACK_STATE_CLIP_STOP ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON2, AbstractView.trackState == TRACK_STATE_SOLO ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON3, AbstractView.trackState == TRACK_STATE_REC_ARM ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON4, AbstractView.trackState == TRACK_STATE_MUTE ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON5, AbstractView.trackState == TRACK_STATE_SELECT ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON6, this.model.isEffectTrackBankActive () ? APC_BUTTON_STATE_ON : APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON7, APC_BUTTON_STATE_OFF);
+    this.surface.updateButton (APC_BUTTON_SCENE_BUTTON8, APC_BUTTON_STATE_OFF);
+};

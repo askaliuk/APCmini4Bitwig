@@ -16,10 +16,10 @@ DrumView.prototype.getPadContentColor = function (drumPad)
 DrumView.prototype.updateArrowStates = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
-    this.canScrollUp = tb.canScrollTracksUp ();
-    this.canScrollDown = tb.canScrollTracksDown ();
-    this.canScrollLeft = this.offsetX > 0;
-    this.canScrollRight = true; // TODO API extension required - We do not know the number of steps
+    this.canScrollUp    = false;
+    this.canScrollDown  = false;
+    this.canScrollLeft  = true;
+    this.canScrollRight = true;
 };
 
 DrumView.prototype.playNote = function (note, velocity)

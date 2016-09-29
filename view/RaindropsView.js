@@ -15,9 +15,9 @@ RaindropsView.prototype.getColor = function (pad, selectedTrack)
 
 RaindropsView.prototype.updateArrowStates = function ()
 {
-    var tb = this.model.getCurrentTrackBank ();
-    this.canScrollUp = tb.canScrollTracksUp ();
-    this.canScrollDown = tb.canScrollTracksDown ();
+    var selScale = this.scales.getSelectedScale ();
+    this.canScrollUp = selScale > 0;
+    this.canScrollDown = selScale < this.scales.scales.length - 1;
     this.canScrollLeft = this.offsetY - RaindropsView.NUM_OCTAVE >= 0;
     this.canScrollRight = this.offsetY + RaindropsView.NUM_OCTAVE <= this.clip.getRowSize () - RaindropsView.NUM_OCTAVE;
 };

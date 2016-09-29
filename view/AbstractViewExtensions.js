@@ -47,7 +47,22 @@ AbstractView.prototype.onShift = function (event)
         this.surface.restoreView ();
 };
 
-AbstractView.prototype.updateSceneButtons = function ()
+AbstractView.prototype.updateArrows = function ()
+{
+    this.updateArrowStates ();
+    this.updateTrackButtons ();
+    this.updateSceneButtons ();
+};
+
+AbstractView.prototype.updateArrowStates = function ()
+{
+    this.canScrollUp    = false;
+    this.canScrollDown  = false;
+    this.canScrollLeft  = false;
+    this.canScrollRight = false;
+};
+
+AbstractView.prototype.updateTrackButtons = function ()
 {
     var tb = this.model.getCurrentTrackBank ();
     for (var i = 0; i < 8; i++)
@@ -71,6 +86,12 @@ AbstractView.prototype.updateSceneButtons = function ()
                 break;
         }
     }
+};
+
+AbstractView.prototype.updateSceneButtons = function ()
+{
+    for (var i = APC_BUTTON_SCENE_BUTTON1; i <= APC_BUTTON_SCENE_BUTTON8; i++)
+        this.surface.updateButton (i, APC_BUTTON_STATE_OFF);
 };
 
 AbstractView.prototype.scrollUp = function (event)
@@ -128,18 +149,6 @@ AbstractView.prototype.onSelectTrack = function (index, event)
 AbstractView.prototype.onMasterVolume = function (value)
 {
     this.model.getMasterTrack ().setVolume (value);
-};
-
-AbstractView.prototype.updateArrows = function ()
-{
-    this.updateArrowStates ();
-    this.updateSceneButtons ();
-};
-
-AbstractView.prototype.turnOffSceneButtons = function ()
-{
-    for (var i = APC_BUTTON_SCENE_BUTTON1; i <= APC_BUTTON_SCENE_BUTTON8; i++)
-        this.surface.updateButton (i, APC_BUTTON_STATE_OFF);
 };
 
 AbstractView.TRANSLATE = [ 0, 2, 4, 6, 1, 3, 5, -1, -1, 10, 8, -1, 11, 9, 7, -1 ];

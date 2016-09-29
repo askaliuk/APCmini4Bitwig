@@ -17,15 +17,6 @@ SessionView.prototype.onActivate = function ()
     this.model.getCurrentTrackBank ().setIndication (true);
 };
 
-SessionView.prototype.updateArrowStates = function ()
-{
-    var tb = this.model.getCurrentTrackBank ();
-    this.canScrollUp = tb.canScrollTracksUp ();
-    this.canScrollDown = tb.canScrollTracksDown ();
-    this.canScrollLeft = tb.canScrollScenesUp ();
-    this.canScrollRight = tb.canScrollScenesDown ();
-};
-
 SessionView.prototype.onScene = function (scene, event)
 {
     if (this.surface.isShiftPressed ())
