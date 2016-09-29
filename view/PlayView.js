@@ -22,8 +22,11 @@ PlayView.prototype.onGridNote = function (note, velocity)
     if (!this.model.canSelectedTrackHoldNotes () || this.noteMap[note] == -1)
         return;
     // Mark selected notes
-    this.setPressedKeys (this.noteMap[note], true, velocity);
-    this.surface.sendMidiEvent (0x90, this.noteMap[note], velocity);
+    if (this.noteMap[note] != -1)
+    {
+        this.setPressedKeys (this.noteMap[note], true, velocity);
+        this.surface.sendMidiEvent (0x90, this.noteMap[note], velocity);
+    }
 };
 
 PlayView.prototype.updateSceneButtons = function ()
